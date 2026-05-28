@@ -29,6 +29,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Dropped `--ignore-vuln CVE-2026-3219` workaround from the `pip-audit` CI step; pip 26.1 (pypa/pip PR #13870, merged 2026-04-19) ships the fix, so the suppression is no longer needed. (#48)
+
 ### Deprecated
 
 ### Removed
