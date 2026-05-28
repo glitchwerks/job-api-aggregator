@@ -6,7 +6,7 @@ Please **do not** open a public GitHub issue for security vulnerabilities.
 
 Use GitHub's private vulnerability reporting instead:
 
-**[Report a vulnerability](https://github.com/cbeaulieu-gt/job-aggregator/security/advisories/new)**
+**[Report a vulnerability](https://github.com/glitchwerks/job-api-aggregator/security/advisories/new)**
 
 GitHub Security Advisories allow you to describe the issue privately. The maintainer
 will acknowledge receipt and work with you on a fix before any public disclosure.

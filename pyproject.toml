@@ -29,11 +29,11 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/cbeaulieu-gt/job-api-aggregator"
-Repository = "https://github.com/cbeaulieu-gt/job-api-aggregator"
-Issues = "https://github.com/cbeaulieu-gt/job-api-aggregator/issues"
-Changelog = "https://github.com/cbeaulieu-gt/job-api-aggregator/blob/main/CHANGELOG.md"
-Documentation = "https://github.com/cbeaulieu-gt/job-api-aggregator"
+Homepage = "https://github.com/glitchwerks/job-api-aggregator"
+Repository = "https://github.com/glitchwerks/job-api-aggregator"
+Issues = "https://github.com/glitchwerks/job-api-aggregator/issues"
+Changelog = "https://github.com/glitchwerks/job-api-aggregator/blob/main/CHANGELOG.md"
+Documentation = "https://github.com/glitchwerks/job-api-aggregator"
 
 [project.scripts]
 job-api-aggregator = "job_api_aggregator.cli.__main__:main"

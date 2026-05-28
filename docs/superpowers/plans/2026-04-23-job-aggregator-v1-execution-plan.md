@@ -60,7 +60,7 @@ Resolve before Issue A is opened.
 - [x] **Adopt uv for Python tooling** — all venv management, installs, and tool invocation use `uv` (not `pip` / `venv` / `virtualenv`). Lock file `uv.lock` committed; `.python-version` committed; CI uses `astral-sh/setup-uv@v3`.
 - [x] **Decide LICENSE** — **Resolved: MIT.** `pyproject.toml` sets `license = "MIT"` (SPDX); `LICENSE` file holds standard MIT text (© 2026 Christopher Beaulieu).
 - [ ] **Decide GitHub repo visibility** (affects PyPI trusted-publishing OIDC trust setup and whether external consumers can `pip install git+…`).
-- [ ] **Configure PyPI trusted publishing** (pending LICENSE/name decisions above) — register the project on PyPI and TestPyPI with the `cbeaulieu-gt/job-api-aggregator` repo + `publish.yml` workflow as the trusted publisher. No API tokens stored anywhere.
+- [ ] **Configure PyPI trusted publishing** (pending LICENSE/name decisions above) — register the project on PyPI and TestPyPI with the `glitchwerks/job-api-aggregator` repo + `publish.yml` workflow as the trusted publisher. No API tokens stored anywhere.
 - [ ] **Reserve the GitHub Milestone** `job-api-aggregator v1` before opening any issues.
 - [ ] **All 10 plugins' credentials are on hand.** (User confirmed: yes.) Cassettes will be recorded for all 10 plugins — including those with no credential requirement, to capture real HTTP shape.
 
@@ -305,7 +305,7 @@ Issue A's final commit must produce an all-green CI run on an empty skeleton (no
 ## 9. Milestone scaffolding (copy-ready for issue creation)
 
 **Milestone:** `job-api-aggregator v1`
-**Repo:** `cbeaulieu-gt/job-api-aggregator`
+**Repo:** `glitchwerks/job-api-aggregator`
 **Description:** "Phase 1: ship standalone job-api-aggregator package v1.0 (per design spec 2026-04-23) through Code-complete gate + Ship gate. Phase 2 migration of job-matcher-pr is tracked separately."
 
 Target: **19 issues.** Create in this order (parents before children) so GitHub renders the dependency graph correctly.
