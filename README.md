@@ -3,7 +3,7 @@
 Reusable job aggregation library: pluggable source plugins, normalized output, no scoring or DB dependencies.
 
 [![PyPI version](https://img.shields.io/pypi/v/job-api-aggregator)](https://pypi.org/project/job-api-aggregator/)
-[![CI](https://github.com/cbeaulieu-gt/job-api-aggregator/actions/workflows/ci.yml/badge.svg)](https://github.com/cbeaulieu-gt/job-api-aggregator/actions/workflows/ci.yml)
+[![CI](https://github.com/glitchwerks/job-api-aggregator/actions/workflows/ci.yml/badge.svg)](https://github.com/glitchwerks/job-api-aggregator/actions/workflows/ci.yml)
 [![Python versions](https://img.shields.io/pypi/pyversions/job-api-aggregator)](https://pypi.org/project/job-api-aggregator/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
