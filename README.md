@@ -52,6 +52,5 @@ credentials file format and per-plugin field requirements.
 
 ## Status
 
-**Pre-1.0 / Alpha.** The public API, output schema, and credentials format
-are under active development and may change between releases until `v1.0.0`
-is tagged.
+**Stable.** The public API, output schema, and credentials format are covered
+by semantic versioning — see [CHANGELOG.md](CHANGELOG.md).

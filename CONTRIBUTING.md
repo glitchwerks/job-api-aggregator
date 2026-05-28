@@ -1,6 +1,6 @@
-# Contributing to job-aggregator
+# Contributing to job-api-aggregator
 
-`job-aggregator` is a standalone Python package extracted from the `job-matcher-pr` project.
+`job-api-aggregator` is a standalone Python package extracted from the `job-matcher-pr` project.
 It provides 10 job-source plugins via a `JobSource` abstract base class, normalises raw API
 responses into a common `JobRecord` TypedDict, and exposes each source through Python's
 entry-point plugin system so consumers can swap or extend sources without forking the core
@@ -106,28 +106,28 @@ uv run deptry .
 
 ## Adding a new job-source plugin
 
-1. **Create the plugin package** at `src/job_aggregator/plugins/<name>/` with an
+1. **Create the plugin package** at `src/job_api_aggregator/plugins/<name>/` with an
    `__init__.py` that exports a class named `Plugin`. Use the existing plugins in that
    directory as templates.
 
-2. **Subclass `JobSource`** from `src/job_aggregator/base.py`. Set all 9 required
+2. **Subclass `JobSource`** from `src/job_api_aggregator/base.py`. Set all 9 required
    `ClassVar` attributes at class level — the base class enforces their presence via
    `__init_subclass__`:
 
    | Attribute | Description |
    |---|---|
+   | `SOURCE` | Unique machine-readable plugin key (lowercase with underscores, e.g. `"my_source"`) |
    | `DISPLAY_NAME` | Human-readable source name |
+   | `DESCRIPTION` | Short human-readable description of the source |
+   | `HOME_URL` | Canonical homepage URL for the job source |
    | `GEO_SCOPE` | One of `"global"`, `"global-by-country"`, `"remote-only"`, `"federal-us"`, `"regional"`, `"unknown"` |
    | `ACCEPTS_QUERY` | `"always"`, `"partial"`, or `"never"` |
    | `ACCEPTS_LOCATION` | `bool` — whether a location filter is supported |
    | `ACCEPTS_COUNTRY` | `bool` — whether a country filter is supported |
    | `RATE_LIMIT_NOTES` | One-line summary of upstream rate limits |
-   | `REQUIRED_SEARCH_FIELDS` | `tuple[str, ...]` of required `SearchParams` field names |
-   | `DESCRIPTION` | Short human-readable description of the source |
-   | `HOME_URL` | Canonical homepage URL for the job source |
 
 3. **Implement `search()`** — fetch from the upstream API and call `normalise()` on each
-   raw result. Raise `ScrapeError` or `CredentialsError` from `src/job_aggregator/errors.py`;
+   raw result. Raise `ScrapeError` or `CredentialsError` from `src/job_api_aggregator/errors.py`;
    never raise a bare `Exception`.
 
 4. **Write tests** under `tests/sources/<name>/`:
@@ -135,8 +135,8 @@ uv run deptry .
    - `test_<name>_integration.py` — VCR tests that replay recorded cassettes.
 
 5. **Register the entry point** in `pyproject.toml` under
-   `[project.entry-points."job_aggregator.plugins"]`, sorted alphabetically:
+   `[project.entry-points."job_api_aggregator.plugins"]`, sorted alphabetically:
 
    ```toml
-   <name> = "job_aggregator.plugins.<name>:Plugin"
+   <name> = "job_api_aggregator.plugins.<name>:Plugin"
    ```
