@@ -7,8 +7,8 @@ from __future__ import annotations
 
 import pytest
 
-from job_aggregator.plugins.adzuna import Plugin
-from job_aggregator.schema import SearchParams
+from job_api_aggregator.plugins.adzuna import Plugin
+from job_api_aggregator.schema import SearchParams
 
 # ---------------------------------------------------------------------------
 # ClassVar / metadata tests
@@ -104,7 +104,7 @@ class TestCredentialsValidation:
 
     def test_missing_app_id_raises(self) -> None:
         """Plugin must raise CredentialsError when app_id is absent."""
-        from job_aggregator.errors import CredentialsError
+        from job_api_aggregator.errors import CredentialsError
 
         with pytest.raises(CredentialsError) as exc_info:
             Plugin(credentials={"app_key": "fake_key"})
@@ -112,7 +112,7 @@ class TestCredentialsValidation:
 
     def test_missing_app_key_raises(self) -> None:
         """Plugin must raise CredentialsError when app_key is absent."""
-        from job_aggregator.errors import CredentialsError
+        from job_api_aggregator.errors import CredentialsError
 
         with pytest.raises(CredentialsError) as exc_info:
             Plugin(credentials={"app_id": "fake_id"})
@@ -120,7 +120,7 @@ class TestCredentialsValidation:
 
     def test_empty_credentials_raises(self) -> None:
         """Plugin must raise CredentialsError when credentials dict is empty."""
-        from job_aggregator.errors import CredentialsError
+        from job_api_aggregator.errors import CredentialsError
 
         with pytest.raises(CredentialsError):
             Plugin(credentials={})

@@ -33,8 +33,8 @@ def api_key() -> str:
 @pytest.mark.vcr()
 def test_pages_returns_results(api_key: str) -> None:
     """pages() yields at least one page with at least one normalised record."""
-    from job_aggregator.plugins.jsearch import Plugin
-    from job_aggregator.schema import SearchParams
+    from job_api_aggregator.plugins.jsearch import Plugin
+    from job_api_aggregator.schema import SearchParams
 
     plugin = Plugin(
         credentials={"api_key": api_key},
@@ -50,8 +50,8 @@ def test_pages_returns_results(api_key: str) -> None:
 @pytest.mark.vcr()
 def test_normalised_record_has_required_fields(api_key: str) -> None:
     """Every record from pages() has the three identity fields filled."""
-    from job_aggregator.plugins.jsearch import Plugin
-    from job_aggregator.schema import SearchParams
+    from job_api_aggregator.plugins.jsearch import Plugin
+    from job_api_aggregator.schema import SearchParams
 
     plugin = Plugin(
         credentials={"api_key": api_key},

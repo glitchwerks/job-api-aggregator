@@ -1,10 +1,10 @@
-"""Tests for job_aggregator schema dataclasses and TypedDict.
+"""Tests for job_api_aggregator schema dataclasses and TypedDict.
 
 Covers PluginField, PluginInfo, SearchParams, and the JobRecord TypedDict
 structural expectations.
 """
 
-from job_aggregator.schema import (
+from job_api_aggregator.schema import (
     JobRecord,
     PluginField,
     PluginInfo,

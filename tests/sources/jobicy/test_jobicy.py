@@ -6,7 +6,7 @@ The VCR integration tests live in test_jobicy_integration.py.
 
 from __future__ import annotations
 
-from job_aggregator.plugins.jobicy import Plugin
+from job_api_aggregator.plugins.jobicy import Plugin
 
 # ---------------------------------------------------------------------------
 # Minimal raw job dict — mirrors the Jobicy API response shape.

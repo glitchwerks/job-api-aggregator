@@ -22,9 +22,9 @@ from typing import Any
 
 import pytest
 
-from job_aggregator.auto_register import discover_plugins
-from job_aggregator.base import JobSource
-from job_aggregator.schema import SearchParams
+from job_api_aggregator.auto_register import discover_plugins
+from job_api_aggregator.base import JobSource
+from job_api_aggregator.schema import SearchParams
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -39,7 +39,7 @@ def _stub_credentials(cls: type[JobSource]) -> dict[str, Any]:
     string so that the plugin's credential-validation logic passes.
 
     Args:
-        cls: A concrete :class:`~job_aggregator.base.JobSource` subclass.
+        cls: A concrete :class:`~job_api_aggregator.base.JobSource` subclass.
 
     Returns:
         Dict mapping each required field name to a placeholder string.
@@ -134,7 +134,7 @@ class TestCanonicalConstructorSignature:
     def test_instantiates_with_search_params(self, cls: type[JobSource]) -> None:
         """``cls(credentials=stub, search=SearchParams())`` produces a valid instance.
 
-        Verifies that passing a :class:`~job_aggregator.schema.SearchParams`
+        Verifies that passing a :class:`~job_api_aggregator.schema.SearchParams`
         object does not cause a crash at construction time.
 
         Args:

@@ -16,8 +16,8 @@ import os
 
 import pytest
 
-from job_aggregator.plugins.adzuna import Plugin
-from job_aggregator.schema import SearchParams
+from job_api_aggregator.plugins.adzuna import Plugin
+from job_api_aggregator.schema import SearchParams
 
 # ---------------------------------------------------------------------------
 # Fixtures

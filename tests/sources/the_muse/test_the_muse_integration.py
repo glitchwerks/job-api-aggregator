@@ -22,8 +22,8 @@ def test_live_search_returns_records() -> None:
     response, and normalises at least one record with the required identity
     fields populated.
     """
-    from job_aggregator.plugins.the_muse import Plugin
-    from job_aggregator.schema import SearchParams
+    from job_api_aggregator.plugins.the_muse import Plugin
+    from job_api_aggregator.schema import SearchParams
 
     plugin = Plugin(search=SearchParams(query="Software Engineer", max_pages=1))
     all_records: list[dict] = []  # type: ignore[type-arg]

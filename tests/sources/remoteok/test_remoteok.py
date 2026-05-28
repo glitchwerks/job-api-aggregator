@@ -10,7 +10,7 @@ from typing import Any
 
 import pytest
 
-from job_aggregator.plugins.remoteok import Plugin
+from job_api_aggregator.plugins.remoteok import Plugin
 
 # ---------------------------------------------------------------------------
 # Fixtures

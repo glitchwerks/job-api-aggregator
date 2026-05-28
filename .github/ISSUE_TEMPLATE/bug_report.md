@@ -26,7 +26,7 @@ What actually happened.
 
 - **Python version:** (e.g. 3.11.9)
 - **OS:** (e.g. Ubuntu 22.04, macOS 14, Windows 11)
-- **job-aggregator version:** (e.g. 1.0.2)
+- **job-api-aggregator version:** (e.g. 1.0.2)
 
 ## Logs
 

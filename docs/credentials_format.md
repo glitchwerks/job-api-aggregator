@@ -1,7 +1,7 @@
 # Credentials File Format
 
 This document specifies the credentials file format owned by the
-`job-aggregator` package. This is a stable contract — the shape is covered
+`job-api-aggregator` package. This is a stable contract — the shape is covered
 by semantic versioning.
 
 ---
@@ -38,7 +38,7 @@ Credentials are stored in a JSON file with the following shape:
 Pass the file path to the CLI with the `--credentials` flag:
 
 ```bash
-job-aggregator jobs --query "python developer" --credentials ~/.job-aggregator/creds.json
+job-api-aggregator jobs --query "python developer" --credentials ~/.job-api-aggregator/creds.json
 ```
 
 ---
@@ -64,10 +64,10 @@ plugin's `settings_schema()`.
 
 The exact fields required by each plugin are described in
 [plugin_authoring.md](plugin_authoring.md#implementing-settings_schema) and
-are discoverable at runtime via `job-aggregator sources`:
+are discoverable at runtime via `job-api-aggregator sources`:
 
 ```bash
-job-aggregator sources --credentials path/to/creds.json
+job-api-aggregator sources --credentials path/to/creds.json
 ```
 
 When `--credentials` is supplied, the `sources` output includes a
@@ -104,7 +104,7 @@ optional enhancements. Missing optional fields do not prevent the plugin from
 running.
 
 The `PluginInfo.requires_credentials` property (accessible via
-`job_aggregator.list_plugins()`) is `True` when any field in the plugin's
+`job_api_aggregator.list_plugins()`) is `True` when any field in the plugin's
 schema has `"required": true`. This lets callers quickly determine which
 plugins need a credentials entry before attempting to run them.
 
@@ -116,7 +116,7 @@ To run `jobs` with credentials for Adzuna and Jooble:
 
 ```bash
 # Save your credentials
-cat > ~/.job-aggregator/creds.json <<'EOF'
+cat > ~/.job-api-aggregator/creds.json <<'EOF'
 {
   "schema_version": "1.0",
   "plugins": {
@@ -132,11 +132,11 @@ cat > ~/.job-aggregator/creds.json <<'EOF'
 EOF
 
 # Run a search using those credentials
-job-aggregator jobs \
+job-api-aggregator jobs \
   --query "python developer" \
   --hours 24 \
-  --credentials ~/.job-aggregator/creds.json \
-  | job-aggregator hydrate > full.jsonl
+  --credentials ~/.job-api-aggregator/creds.json \
+  | job-api-aggregator hydrate > full.jsonl
 ```
 
 Plugins without a credentials entry in the file are still run if they do not
@@ -145,5 +145,5 @@ run, use the `JOB_SCRAPER_DISABLE_PLUGINS` environment variable:
 
 ```bash
 export JOB_SCRAPER_DISABLE_PLUGINS="the_muse,usajobs"
-job-aggregator jobs --query "python developer" --credentials creds.json
+job-api-aggregator jobs --query "python developer" --credentials creds.json
 ```

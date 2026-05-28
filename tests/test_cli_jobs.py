@@ -35,7 +35,7 @@ def _import_main() -> Any:
     Returns:
         The ``main`` callable.
     """
-    from job_aggregator.cli.__main__ import main
+    from job_api_aggregator.cli.__main__ import main
 
     return main
 
@@ -46,7 +46,7 @@ def _import_jobs_handler() -> Any:
     Returns:
         The ``cmd_jobs`` callable.
     """
-    from job_aggregator.cli.__main__ import cmd_jobs
+    from job_api_aggregator.cli.__main__ import cmd_jobs
 
     return cmd_jobs
 
@@ -98,7 +98,7 @@ def _run_cmd_jobs(
         creds_path = str(creds_file)
 
     # Parse argv via the real argparse to get a Namespace
-    from job_aggregator.cli.__main__ import _build_parser
+    from job_api_aggregator.cli.__main__ import _build_parser
 
     parser = _build_parser()
     full_argv = ["jobs", *argv]
@@ -110,7 +110,7 @@ def _run_cmd_jobs(
         patch("sys.stdout", stdout_buf),
         patch("sys.stderr", stderr_buf),
         patch(
-            "job_aggregator.orchestrator.discover_plugins",
+            "job_api_aggregator.orchestrator.discover_plugins",
             return_value=plugin_classes,
         ),
     ):
@@ -133,7 +133,7 @@ class TestHelp:
 
     def test_help_lists_jobs_subcommand(self, tmp_path: Any) -> None:
         """--help must mention the jobs subcommand."""
-        from job_aggregator.cli.__main__ import _build_parser
+        from job_api_aggregator.cli.__main__ import _build_parser
 
         parser = _build_parser()
         buf = StringIO()
@@ -147,7 +147,7 @@ class TestHelp:
 
     def test_jobs_help_lists_all_flags(self, tmp_path: Any) -> None:
         """``jobs --help`` must list all required flags."""
-        from job_aggregator.cli.__main__ import _build_parser
+        from job_api_aggregator.cli.__main__ import _build_parser
 
         parser = _build_parser()
         buf = StringIO()
@@ -292,7 +292,7 @@ class TestUnimplementedSubcommands:
 
     def test_hydrate_subcommand_exists(self) -> None:
         """hydrate subcommand must be registered in the parser."""
-        from job_aggregator.cli.__main__ import _build_parser
+        from job_api_aggregator.cli.__main__ import _build_parser
 
         parser = _build_parser()
         buf = StringIO()
@@ -308,7 +308,7 @@ class TestUnimplementedSubcommands:
 
     def test_sources_subcommand_exists(self) -> None:
         """sources subcommand must be registered in the parser."""
-        from job_aggregator.cli.__main__ import _build_parser
+        from job_api_aggregator.cli.__main__ import _build_parser
 
         parser = _build_parser()
         buf = StringIO()

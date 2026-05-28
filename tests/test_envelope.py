@@ -1,4 +1,4 @@
-"""Tests for the job_aggregator.envelope module.
+"""Tests for the job_api_aggregator.envelope module.
 
 Covers:
 - build_envelope() produces the correct §9.2 structure.
@@ -17,8 +17,8 @@ import json
 from datetime import UTC, datetime
 from typing import Any
 
-from job_aggregator.envelope import build_envelope, build_jsonl_lines
-from job_aggregator.schema import JobRecord
+from job_api_aggregator.envelope import build_envelope, build_jsonl_lines
+from job_api_aggregator.schema import JobRecord
 
 # ---------------------------------------------------------------------------
 # Helpers / fixtures

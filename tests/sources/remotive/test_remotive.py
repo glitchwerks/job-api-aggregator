@@ -16,8 +16,8 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from job_aggregator.plugins.remotive import Plugin
-from job_aggregator.schema import SearchParams
+from job_api_aggregator.plugins.remotive import Plugin
+from job_api_aggregator.schema import SearchParams
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -256,7 +256,8 @@ class TestPages:
         mock_resp.status_code = 200
         mock_resp.json.return_value = {"jobs": raw_jobs}
 
-        with patch("job_aggregator.plugins.remotive.plugin.requests.get", return_value=mock_resp):
+        _patch = "job_api_aggregator.plugins.remotive.plugin.requests.get"
+        with patch(_patch, return_value=mock_resp):
             pages = list(self.plugin.pages())
 
         assert len(pages) == 1
@@ -269,7 +270,8 @@ class TestPages:
         mock_resp.status_code = 200
         mock_resp.json.return_value = {"jobs": []}
 
-        with patch("job_aggregator.plugins.remotive.plugin.requests.get", return_value=mock_resp):
+        _patch = "job_api_aggregator.plugins.remotive.plugin.requests.get"
+        with patch(_patch, return_value=mock_resp):
             pages = list(self.plugin.pages())
 
         assert pages == []
@@ -278,7 +280,8 @@ class TestPages:
         mock_resp = MagicMock()
         mock_resp.status_code = 503
 
-        with patch("job_aggregator.plugins.remotive.plugin.requests.get", return_value=mock_resp):
+        _patch = "job_api_aggregator.plugins.remotive.plugin.requests.get"
+        with patch(_patch, return_value=mock_resp):
             pages = list(self.plugin.pages())
 
         assert pages == []
@@ -286,11 +289,11 @@ class TestPages:
     def test_pages_raises_scrape_error_on_network_failure(self) -> None:
         import requests as req
 
-        from job_aggregator.errors import ScrapeError
+        from job_api_aggregator.errors import ScrapeError
 
         with (
             patch(
-                "job_aggregator.plugins.remotive.plugin.requests.get",
+                "job_api_aggregator.plugins.remotive.plugin.requests.get",
                 side_effect=req.RequestException("connection refused"),
             ),
             pytest.raises(ScrapeError),

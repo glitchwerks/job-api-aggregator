@@ -15,9 +15,9 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from job_aggregator.auto_register import discover_plugins
-from job_aggregator.base import JobSource
-from job_aggregator.errors import PluginConflictError
+from job_api_aggregator.auto_register import discover_plugins
+from job_api_aggregator.base import JobSource
+from job_api_aggregator.errors import PluginConflictError
 
 # ---------------------------------------------------------------------------
 # Helpers: synthetic JobSource subclasses and mock entry-points
@@ -76,7 +76,7 @@ class TestDiscoverPluginsHappyPath:
     def test_returns_empty_dict_when_no_entry_points(self) -> None:
         """discover_plugins returns {} when no entry-points are registered."""
         with patch(
-            "job_aggregator.auto_register.entry_points",
+            "job_api_aggregator.auto_register.entry_points",
             return_value=[],
         ):
             result = discover_plugins()
@@ -88,7 +88,7 @@ class TestDiscoverPluginsHappyPath:
         ep_a = _make_entry_point("adzuna", cls_a, "job-aggregator")
 
         with patch(
-            "job_aggregator.auto_register.entry_points",
+            "job_api_aggregator.auto_register.entry_points",
             return_value=[ep_a],
         ):
             result = discover_plugins()
@@ -106,7 +106,7 @@ class TestDiscoverPluginsHappyPath:
         ]
 
         with patch(
-            "job_aggregator.auto_register.entry_points",
+            "job_api_aggregator.auto_register.entry_points",
             return_value=eps,
         ):
             result = discover_plugins()
@@ -136,7 +136,7 @@ class TestDiscoverPluginsCollisionDetection:
         with (
             pytest.raises(PluginConflictError) as exc_info,
             patch(
-                "job_aggregator.auto_register.entry_points",
+                "job_api_aggregator.auto_register.entry_points",
                 return_value=eps,
             ),
         ):
@@ -157,7 +157,7 @@ class TestDiscoverPluginsCollisionDetection:
         with (
             pytest.raises(PluginConflictError) as exc_info,
             patch(
-                "job_aggregator.auto_register.entry_points",
+                "job_api_aggregator.auto_register.entry_points",
                 return_value=eps,
             ),
         ):
@@ -185,7 +185,7 @@ class TestDiscoverPluginsCollisionDetection:
         with (
             pytest.raises(PluginConflictError) as exc_info,
             patch(
-                "job_aggregator.auto_register.entry_points",
+                "job_api_aggregator.auto_register.entry_points",
                 return_value=eps,
             ),
         ):
@@ -213,7 +213,7 @@ class TestDiscoverPluginsDisableFilter:
         ]
 
         with patch(
-            "job_aggregator.auto_register.entry_points",
+            "job_api_aggregator.auto_register.entry_points",
             return_value=eps,
         ):
             result = discover_plugins()
@@ -234,7 +234,7 @@ class TestDiscoverPluginsDisableFilter:
         ]
 
         with patch(
-            "job_aggregator.auto_register.entry_points",
+            "job_api_aggregator.auto_register.entry_points",
             return_value=eps,
         ):
             result = discover_plugins()
@@ -263,7 +263,7 @@ class TestDiscoverPluginsDisableFilter:
         with (
             pytest.raises(PluginConflictError),
             patch(
-                "job_aggregator.auto_register.entry_points",
+                "job_api_aggregator.auto_register.entry_points",
                 return_value=eps,
             ),
         ):
@@ -280,7 +280,7 @@ class TestDiscoverPluginsDisableFilter:
         ]
 
         with patch(
-            "job_aggregator.auto_register.entry_points",
+            "job_api_aggregator.auto_register.entry_points",
             return_value=eps,
         ):
             result = discover_plugins()
@@ -298,7 +298,7 @@ class TestDiscoverPluginsDisableFilter:
         ]
 
         with patch(
-            "job_aggregator.auto_register.entry_points",
+            "job_api_aggregator.auto_register.entry_points",
             return_value=eps,
         ):
             result = discover_plugins()

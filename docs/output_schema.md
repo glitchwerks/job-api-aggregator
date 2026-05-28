@@ -1,7 +1,7 @@
 # Output Schema
 
-This document specifies the JSON/JSONL output produced by `job-aggregator jobs`
-and `job-aggregator hydrate`. It is the authoritative reference for all
+This document specifies the JSON/JSONL output produced by `job-api-aggregator jobs`
+and `job-api-aggregator hydrate`. It is the authoritative reference for all
 consumers of the package's output.
 
 ---
@@ -24,7 +24,7 @@ consumers of the package's output.
 
 ## Envelope
 
-Every output from `job-aggregator jobs` or `job-aggregator hydrate` begins
+Every output from `job-api-aggregator jobs` or `job-api-aggregator hydrate` begins
 with an envelope object.
 
 **JSON format** (`--format json`): the envelope is the top-level object; the
@@ -194,7 +194,7 @@ identically. Tests in the package validate against them.
 | `"snippet"` or `"none"` | url empty/missing | unchanged | unchanged |
 
 `SCRAPE_MIN_LENGTH` is a public constant exported from
-`job_aggregator.scraping`. Downstream consumers that implement equivalent
+`job_api_aggregator.scraping`. Downstream consumers that implement equivalent
 scrape logic must import it rather than hard-coding a value.
 
 ---

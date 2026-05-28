@@ -19,8 +19,8 @@ from __future__ import annotations
 from typing import Any
 from unittest.mock import MagicMock, patch
 
-from job_aggregator.plugins.arbeitnow import Plugin
-from job_aggregator.schema import SearchParams
+from job_api_aggregator.plugins.arbeitnow import Plugin
+from job_api_aggregator.schema import SearchParams
 
 # ---------------------------------------------------------------------------
 # Fixtures: synthetic raw listing dicts
@@ -114,7 +114,7 @@ class TestPluginMetadata:
 
     def test_plugin_is_job_source_subclass(self) -> None:
         """Plugin subclasses JobSource (ABC contract enforced at import)."""
-        from job_aggregator.base import JobSource
+        from job_api_aggregator.base import JobSource
 
         assert issubclass(Plugin, JobSource)
 
@@ -375,7 +375,7 @@ class TestPages:
         fake_page1 = {"data": [FULL_RAW, REMOTE_RAW], "meta": {"last_page": 1}}
 
         plugin = Plugin()
-        with patch("job_aggregator.plugins.arbeitnow.plugin.requests.get") as mock_get:
+        with patch("job_api_aggregator.plugins.arbeitnow.plugin.requests.get") as mock_get:
             mock_resp = MagicMock()
             mock_resp.status_code = 200
             mock_resp.json.return_value = fake_page1
@@ -392,7 +392,7 @@ class TestPages:
         meta_resp = {"data": [], "meta": {"last_page": 5}}
 
         plugin = Plugin()
-        with patch("job_aggregator.plugins.arbeitnow.plugin.requests.get") as mock_get:
+        with patch("job_api_aggregator.plugins.arbeitnow.plugin.requests.get") as mock_get:
             mock_resp = MagicMock()
             mock_resp.status_code = 200
             mock_resp.json.return_value = meta_resp
@@ -409,7 +409,7 @@ class TestPages:
         page_response = {"data": [FULL_RAW], "meta": {"last_page": 10}}
 
         plugin = Plugin(search=SearchParams(max_pages=2))
-        with patch("job_aggregator.plugins.arbeitnow.plugin.requests.get") as mock_get:
+        with patch("job_api_aggregator.plugins.arbeitnow.plugin.requests.get") as mock_get:
             mock_resp = MagicMock()
             mock_resp.status_code = 200
             mock_resp.raise_for_status.return_value = None
@@ -427,7 +427,7 @@ class TestPages:
     def test_pages_returns_iterator(self) -> None:
         """pages() returns an iterator (not a plain list)."""
         plugin = Plugin()
-        with patch("job_aggregator.plugins.arbeitnow.plugin.requests.get") as mock_get:
+        with patch("job_api_aggregator.plugins.arbeitnow.plugin.requests.get") as mock_get:
             mock_resp = MagicMock()
             mock_resp.status_code = 200
             mock_resp.json.return_value = {"data": [], "meta": {"last_page": 1}}

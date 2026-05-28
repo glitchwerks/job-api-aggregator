@@ -1,4 +1,4 @@
-"""Tests for job_aggregator.registry — list_plugins, get_plugin, make_enabled_sources.
+"""Tests for job_api_aggregator.registry — list_plugins, get_plugin, make_enabled_sources.
 
 Covers:
 - list_plugins() returns all 10 registered plugins with complete PluginInfo.
@@ -6,7 +6,7 @@ Covers:
 - make_enabled_sources() instantiates plugins when credentials are present;
   skips plugins whose required credentials are missing or whose
   REQUIRED_SEARCH_FIELDS are not satisfied.
-- Public API importability from job_aggregator root.
+- Public API importability from job_api_aggregator root.
 """
 
 from __future__ import annotations
@@ -15,9 +15,9 @@ from collections.abc import Iterator
 from typing import Any, ClassVar
 from unittest.mock import patch
 
-from job_aggregator.base import JobSource
-from job_aggregator.registry import get_plugin, list_plugins, make_enabled_sources
-from job_aggregator.schema import PluginField, PluginInfo, SearchParams
+from job_api_aggregator.base import JobSource
+from job_api_aggregator.registry import get_plugin, list_plugins, make_enabled_sources
+from job_api_aggregator.schema import PluginField, PluginInfo, SearchParams
 
 # ---------------------------------------------------------------------------
 # Helpers — synthetic plugin classes for isolation
@@ -129,23 +129,23 @@ def _make_no_cred_plugin(source_key: str) -> type[JobSource]:
 
 
 class TestPublicApiImportability:
-    """Verify that the public symbols are re-exported from job_aggregator root."""
+    """Verify that the public symbols are re-exported from job_api_aggregator root."""
 
     def test_list_plugins_importable_from_package_root(self) -> None:
-        """list_plugins is importable from job_aggregator."""
-        from job_aggregator import list_plugins as lp
+        """list_plugins is importable from job_api_aggregator."""
+        from job_api_aggregator import list_plugins as lp
 
         assert callable(lp)
 
     def test_get_plugin_importable_from_package_root(self) -> None:
-        """get_plugin is importable from job_aggregator."""
-        from job_aggregator import get_plugin as gp
+        """get_plugin is importable from job_api_aggregator."""
+        from job_api_aggregator import get_plugin as gp
 
         assert callable(gp)
 
     def test_make_enabled_sources_importable_from_package_root(self) -> None:
-        """make_enabled_sources is importable from job_aggregator."""
-        from job_aggregator import make_enabled_sources as mes
+        """make_enabled_sources is importable from job_api_aggregator."""
+        from job_api_aggregator import make_enabled_sources as mes
 
         assert callable(mes)
 
@@ -305,7 +305,7 @@ class TestListPluginsUnit:
         """list_plugins builds a PluginInfo with correct fields for a cred plugin."""
         cls_a = _make_cred_plugin("testplugin")
         with patch(
-            "job_aggregator.registry.discover_plugins",
+            "job_api_aggregator.registry.discover_plugins",
             return_value={"testplugin": cls_a},
         ):
             result = list_plugins()
@@ -323,7 +323,7 @@ class TestListPluginsUnit:
         """list_plugins builds PluginInfo with empty fields for a no-cred plugin."""
         cls_b = _make_no_cred_plugin("freesource")
         with patch(
-            "job_aggregator.registry.discover_plugins",
+            "job_api_aggregator.registry.discover_plugins",
             return_value={"freesource": cls_b},
         ):
             result = list_plugins()
@@ -338,7 +338,7 @@ class TestListPluginsUnit:
         cls_z = _make_no_cred_plugin("zzz")
         cls_a = _make_no_cred_plugin("aaa")
         with patch(
-            "job_aggregator.registry.discover_plugins",
+            "job_api_aggregator.registry.discover_plugins",
             return_value={"zzz": cls_z, "aaa": cls_a},
         ):
             result = list_plugins()
@@ -358,7 +358,7 @@ class TestMakeEnabledSources:
         """make_enabled_sources returns a plugin instance when creds are provided."""
         cls_a = _make_cred_plugin("alpha", "api_key")
         with patch(
-            "job_aggregator.registry.discover_plugins",
+            "job_api_aggregator.registry.discover_plugins",
             return_value={"alpha": cls_a},
         ):
             result = make_enabled_sources(
@@ -373,7 +373,7 @@ class TestMakeEnabledSources:
         """make_enabled_sources skips plugins with no entry in credentials dict."""
         cls_a = _make_cred_plugin("alpha", "api_key")
         with patch(
-            "job_aggregator.registry.discover_plugins",
+            "job_api_aggregator.registry.discover_plugins",
             return_value={"alpha": cls_a},
         ):
             result = make_enabled_sources(
@@ -387,7 +387,7 @@ class TestMakeEnabledSources:
         """make_enabled_sources skips a plugin whose required cred field is empty."""
         cls_a = _make_cred_plugin("alpha", "api_key")
         with patch(
-            "job_aggregator.registry.discover_plugins",
+            "job_api_aggregator.registry.discover_plugins",
             return_value={"alpha": cls_a},
         ):
             result = make_enabled_sources(
@@ -401,7 +401,7 @@ class TestMakeEnabledSources:
         """make_enabled_sources includes no-credential plugins unconditionally."""
         cls_b = _make_no_cred_plugin("freesource")
         with patch(
-            "job_aggregator.registry.discover_plugins",
+            "job_api_aggregator.registry.discover_plugins",
             return_value={"freesource": cls_b},
         ):
             result = make_enabled_sources(
@@ -417,7 +417,7 @@ class TestMakeEnabledSources:
         cls_cred = _make_cred_plugin("credplugin", "api_key")
         cls_free = _make_no_cred_plugin("freeplugin")
         with patch(
-            "job_aggregator.registry.discover_plugins",
+            "job_api_aggregator.registry.discover_plugins",
             return_value={"credplugin": cls_cred, "freeplugin": cls_free},
         ):
             result = make_enabled_sources(
@@ -433,7 +433,7 @@ class TestMakeEnabledSources:
         cls_b = _make_no_cred_plugin("freesource")
         search = SearchParams(query="python developer", country="us")
         with patch(
-            "job_aggregator.registry.discover_plugins",
+            "job_api_aggregator.registry.discover_plugins",
             return_value={"freesource": cls_b},
         ):
             result = make_enabled_sources(

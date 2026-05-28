@@ -1,6 +1,6 @@
 # Plugin Authoring Guide
 
-This guide explains how to write a new `job-aggregator` source plugin —
+This guide explains how to write a new `job-api-aggregator` source plugin —
 either as part of the bundled set or as a third-party package distributed
 separately on PyPI.
 
@@ -26,10 +26,10 @@ separately on PyPI.
 
 A plugin is a Python class that:
 
-1. Subclasses `job_aggregator.JobSource` (an abstract base class).
+1. Subclasses `job_api_aggregator.JobSource` (an abstract base class).
 2. Declares nine required class-level metadata attributes.
 3. Implements `settings_schema()`, `pages()`, and `normalise()`.
-4. Registers itself via a `job_aggregator.plugins` entry-point.
+4. Registers itself via a `job_api_aggregator.plugins` entry-point.
 
 The base class enforces attribute presence at class-creation time (not at
 runtime), so a missing attribute raises `TypeError` on import rather than
@@ -45,8 +45,8 @@ from __future__ import annotations
 from collections.abc import Iterator
 from typing import Any
 
-from job_aggregator import JobSource
-from job_aggregator.schema import SearchParams
+from job_api_aggregator import JobSource
+from job_api_aggregator.schema import SearchParams
 
 
 class Plugin(JobSource):
@@ -81,7 +81,7 @@ class Plugin(JobSource):
         super().__init__(credentials=credentials, search=search)
         creds = credentials or {}
         if not creds.get("api_key"):
-            from job_aggregator import CredentialsError
+            from job_api_aggregator import CredentialsError
             raise CredentialsError(self.SOURCE, ["api_key"])
         self._api_key = creds["api_key"]
 
@@ -104,7 +104,7 @@ Missing any one raises `TypeError` at import time.
 | Attribute | Type | Description |
 |---|---|---|
 | `SOURCE` | `str` | Unique machine-readable plugin key. Used as the `source` field in output records and as the dict key in credentials files. Must be lowercase with underscores (e.g. `"my_source"`). Must not collide with any other registered plugin. |
-| `DISPLAY_NAME` | `str` | Human-readable name shown in UIs and the `job-aggregator sources` listing (e.g. `"My Source"`). |
+| `DISPLAY_NAME` | `str` | Human-readable name shown in UIs and the `job-api-aggregator sources` listing (e.g. `"My Source"`). |
 | `DESCRIPTION` | `str` | Short description of what this source provides (one or two sentences). |
 | `HOME_URL` | `str` | URL for the source's public homepage or API documentation. |
 | `GEO_SCOPE` | `str` | Geographic coverage. One of: `"global"`, `"global-by-country"`, `"remote-only"`, `"federal-us"`, `"regional"`, `"unknown"`. |
@@ -142,7 +142,7 @@ def __init__(
 - No-auth plugins must still accept `credentials` and pass it to `super()`;
   they simply ignore the value.
 - If required credentials are missing or empty, raise `CredentialsError`
-  from `job_aggregator` immediately in `__init__` rather than deferring the
+  from `job_api_aggregator` immediately in `__init__` rather than deferring the
   failure to `pages()`.
 
 ---
@@ -269,7 +269,7 @@ Validate required fields in `__init__` and raise `CredentialsError` if any
 are missing:
 
 ```python
-from job_aggregator import CredentialsError
+from job_api_aggregator import CredentialsError
 
 def __init__(
     self,
@@ -295,11 +295,11 @@ consistent with what `settings_schema()` marks as required.
 
 ## Registering via Entry-Points
 
-Third-party plugins register themselves using the `job_aggregator.plugins`
+Third-party plugins register themselves using the `job_api_aggregator.plugins`
 entry-point group in their `pyproject.toml`:
 
 ```toml
-[project.entry-points."job_aggregator.plugins"]
+[project.entry-points."job_api_aggregator.plugins"]
 my_source = "my_package.plugin:Plugin"
 ```
 
@@ -316,7 +316,7 @@ conflicting key to the `JOB_SCRAPER_DISABLE_PLUGINS` environment variable
 
 For bundled plugins (those shipped inside this package), the entry-points are
 declared in the package's own `pyproject.toml` under
-`[project.entry-points."job_aggregator.plugins"]`.
+`[project.entry-points."job_api_aggregator.plugins"]`.
 
 ---
 
@@ -344,8 +344,8 @@ tests/sources/<plugin_key>/
 
 ```python
 import pytest
-from job_aggregator.plugins.my_source import Plugin
-from job_aggregator.schema import SearchParams
+from job_api_aggregator.plugins.my_source import Plugin
+from job_api_aggregator.schema import SearchParams
 
 
 @pytest.fixture()
@@ -415,13 +415,13 @@ plugin registry when two registrations share the same `SOURCE` key.
 hydrator when an HTTP request fails or the response body cannot be parsed.
 
 **`SchemaVersionError`** (`got: str`, `expected: str`) — raised by
-`job-aggregator hydrate` when the input envelope's `schema_version` major
+`job-api-aggregator hydrate` when the input envelope's `schema_version` major
 component does not match the package's current major version.
 
-All exceptions are importable directly from `job_aggregator`:
+All exceptions are importable directly from `job_api_aggregator`:
 
 ```python
-from job_aggregator import (
+from job_api_aggregator import (
     CredentialsError,
     JobAggregatorError,
     PluginConflictError,

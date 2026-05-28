@@ -1,4 +1,4 @@
-"""Tests for job_aggregator.hydrator — orchestrator-level hydrate logic.
+"""Tests for job_api_aggregator.hydrator — orchestrator-level hydrate logic.
 
 Covers:
 - §9.6 hydrate truth table rows (all four hydrate-orchestrator rows).
@@ -23,8 +23,8 @@ from unittest.mock import patch
 
 import pytest
 
-from job_aggregator.errors import SchemaVersionError
-from job_aggregator.hydrator import HydrateConfig, hydrate
+from job_api_aggregator.errors import SchemaVersionError
+from job_api_aggregator.hydrator import HydrateConfig, hydrate
 
 # ---------------------------------------------------------------------------
 # Helpers / fixtures
@@ -130,7 +130,7 @@ def test_hydrate_row1_already_full_passes_through() -> None:
     )
     input_text = _make_jsonl_input([rec])
 
-    with patch("job_aggregator.hydrator.scrape_description") as mock_scrape:
+    with patch("job_api_aggregator.hydrator.scrape_description") as mock_scrape:
         result = hydrate(io.StringIO(input_text), _default_config())
 
     mock_scrape.assert_not_called()
@@ -145,7 +145,7 @@ def test_hydrate_row2_snippet_scrape_success_sets_full() -> None:
     input_text = _make_jsonl_input([rec])
 
     with patch(
-        "job_aggregator.hydrator.scrape_description",
+        "job_api_aggregator.hydrator.scrape_description",
         return_value=(_LONG_TEXT, True),
     ):
         result = hydrate(io.StringIO(input_text), _default_config())
@@ -161,7 +161,7 @@ def test_hydrate_row2_none_scrape_success_sets_full() -> None:
     input_text = _make_jsonl_input([rec])
 
     with patch(
-        "job_aggregator.hydrator.scrape_description",
+        "job_api_aggregator.hydrator.scrape_description",
         return_value=(_LONG_TEXT, True),
     ):
         result = hydrate(io.StringIO(input_text), _default_config())
@@ -180,7 +180,7 @@ def test_hydrate_row3_scrape_failure_preserves_input() -> None:
     input_text = _make_jsonl_input([rec])
 
     with patch(
-        "job_aggregator.hydrator.scrape_description",
+        "job_api_aggregator.hydrator.scrape_description",
         return_value=("original snippet", False),
     ):
         result = hydrate(io.StringIO(input_text), _default_config())
@@ -196,7 +196,7 @@ def test_hydrate_row4_missing_url_passes_through() -> None:
     del rec["url"]
     input_text = _make_jsonl_input([rec])
 
-    with patch("job_aggregator.hydrator.scrape_description") as mock_scrape:
+    with patch("job_api_aggregator.hydrator.scrape_description") as mock_scrape:
         result = hydrate(io.StringIO(input_text), _default_config())
 
     mock_scrape.assert_not_called()
@@ -215,7 +215,7 @@ def test_input_handling_url_absent_passes_through(capsys: pytest.CaptureFixture[
     del rec["url"]
     input_text = _make_jsonl_input([rec])
 
-    with patch("job_aggregator.hydrator.scrape_description") as mock_scrape:
+    with patch("job_api_aggregator.hydrator.scrape_description") as mock_scrape:
         hydrate(io.StringIO(input_text), _default_config())
 
     mock_scrape.assert_not_called()
@@ -228,7 +228,7 @@ def test_input_handling_url_null_passes_through(capsys: pytest.CaptureFixture[st
     rec = _make_record(url=None)  # type: ignore[arg-type]
     input_text = _make_jsonl_input([rec])
 
-    with patch("job_aggregator.hydrator.scrape_description") as mock_scrape:
+    with patch("job_api_aggregator.hydrator.scrape_description") as mock_scrape:
         hydrate(io.StringIO(input_text), _default_config())
 
     mock_scrape.assert_not_called()
@@ -239,7 +239,7 @@ def test_input_handling_url_empty_passes_through(capsys: pytest.CaptureFixture[s
     rec = _make_record(url="")
     input_text = _make_jsonl_input([rec])
 
-    with patch("job_aggregator.hydrator.scrape_description") as mock_scrape:
+    with patch("job_api_aggregator.hydrator.scrape_description") as mock_scrape:
         hydrate(io.StringIO(input_text), _default_config())
 
     mock_scrape.assert_not_called()
@@ -250,7 +250,7 @@ def test_input_handling_malformed_url_passes_through(capsys: pytest.CaptureFixtu
     rec = _make_record(url="ftp://not-http.example.com/")
     input_text = _make_jsonl_input([rec])
 
-    with patch("job_aggregator.hydrator.scrape_description") as mock_scrape:
+    with patch("job_api_aggregator.hydrator.scrape_description") as mock_scrape:
         hydrate(io.StringIO(input_text), _default_config())
 
     mock_scrape.assert_not_called()
@@ -261,7 +261,7 @@ def test_input_handling_unknown_description_source_passes_through() -> None:
     rec = _make_record(description_source="unknown_future_value")
     input_text = _make_jsonl_input([rec])
 
-    with patch("job_aggregator.hydrator.scrape_description") as mock_scrape:
+    with patch("job_api_aggregator.hydrator.scrape_description") as mock_scrape:
         result = hydrate(io.StringIO(input_text), _default_config())
 
     mock_scrape.assert_not_called()
@@ -286,7 +286,7 @@ def test_input_handling_same_major_minor_diff_warns(
     input_text = _make_json_input([rec], {"schema_version": "1.99"})
 
     with patch(
-        "job_aggregator.hydrator.scrape_description",
+        "job_api_aggregator.hydrator.scrape_description",
         return_value=(_LONG_TEXT, True),
     ):
         result = hydrate(io.StringIO(input_text), _default_config(fmt="json"))
@@ -302,14 +302,14 @@ def test_input_handling_same_major_minor_diff_warns(
 
 def test_strict_raises_on_scrape_failure() -> None:
     """--strict: ScrapeError (or SystemExit) raised on scrape failure."""
-    from job_aggregator.errors import ScrapeError
+    from job_api_aggregator.errors import ScrapeError
 
     rec = _make_record(description_source="snippet")
     input_text = _make_jsonl_input([rec])
 
     with (
         patch(
-            "job_aggregator.hydrator.scrape_description",
+            "job_api_aggregator.hydrator.scrape_description",
             return_value=("short", False),
         ),
         pytest.raises((ScrapeError, SystemExit)),
@@ -326,7 +326,7 @@ def test_continue_on_error_does_not_raise() -> None:
     input_text = _make_jsonl_input([rec])
 
     with patch(
-        "job_aggregator.hydrator.scrape_description",
+        "job_api_aggregator.hydrator.scrape_description",
         return_value=("short snippet", False),
     ):
         # Should NOT raise
@@ -347,7 +347,7 @@ def test_timeout_per_request_passed_to_scrape() -> None:
     input_text = _make_jsonl_input([rec])
 
     with patch(
-        "job_aggregator.hydrator.scrape_description",
+        "job_api_aggregator.hydrator.scrape_description",
         return_value=(_LONG_TEXT, True),
     ) as mock_scrape:
         hydrate(
@@ -376,7 +376,7 @@ def test_timeout_total_exceeded_passes_remaining_through() -> None:
         time.sleep(0.2)  # simulate slow HTTP
         return (_LONG_TEXT, True)
 
-    with patch("job_aggregator.hydrator.scrape_description", side_effect=slow_scrape):
+    with patch("job_api_aggregator.hydrator.scrape_description", side_effect=slow_scrape):
         result = hydrate(
             io.StringIO(input_text),
             _default_config(timeout_total=0),  # 0s budget → expires immediately
@@ -400,7 +400,7 @@ def test_hydrate_updates_command_in_envelope() -> None:
     input_text = _make_json_input([rec])
 
     with patch(
-        "job_aggregator.hydrator.scrape_description",
+        "job_api_aggregator.hydrator.scrape_description",
         return_value=(_LONG_TEXT, True),
     ):
         result = hydrate(io.StringIO(input_text), _default_config(fmt="json"))
@@ -415,7 +415,7 @@ def test_hydrate_updates_generated_at_in_envelope() -> None:
     input_text = _make_json_input([rec], {"generated_at": "2020-01-01T00:00:00Z"})
 
     with patch(
-        "job_aggregator.hydrator.scrape_description",
+        "job_api_aggregator.hydrator.scrape_description",
         return_value=(_LONG_TEXT, True),
     ):
         result = hydrate(io.StringIO(input_text), _default_config(fmt="json"))
@@ -437,7 +437,7 @@ def test_hydrate_preserves_request_summary() -> None:
     input_text = _make_json_input([rec], {"request_summary": summary})
 
     with patch(
-        "job_aggregator.hydrator.scrape_description",
+        "job_api_aggregator.hydrator.scrape_description",
         return_value=(_LONG_TEXT, True),
     ):
         result = hydrate(io.StringIO(input_text), _default_config(fmt="json"))
@@ -457,7 +457,7 @@ def test_format_inference_json_when_jobs_key_present() -> None:
     input_text = _make_json_input([rec])
 
     with patch(
-        "job_aggregator.hydrator.scrape_description",
+        "job_api_aggregator.hydrator.scrape_description",
         return_value=(_LONG_TEXT, True),
     ):
         # fmt=None → inferred
@@ -475,7 +475,7 @@ def test_format_inference_jsonl_for_plain_records() -> None:
     input_text = _make_jsonl_input([rec])  # no envelope
 
     with patch(
-        "job_aggregator.hydrator.scrape_description",
+        "job_api_aggregator.hydrator.scrape_description",
         return_value=(_LONG_TEXT, True),
     ):
         result = hydrate(io.StringIO(input_text), _default_config(fmt=None))
@@ -499,7 +499,7 @@ def test_format_inference_jsonl_when_no_jobs_key() -> None:
     input_text = "\n".join(lines)
 
     with patch(
-        "job_aggregator.hydrator.scrape_description",
+        "job_api_aggregator.hydrator.scrape_description",
         return_value=(_LONG_TEXT, True),
     ):
         # Should not raise
@@ -515,7 +515,7 @@ def test_format_inference_jsonl_when_no_jobs_key() -> None:
 
 def test_hydrate_re_exported_from_package() -> None:
     """hydrate must be importable from the package root."""
-    from job_aggregator import hydrate as pkg_hydrate
+    from job_api_aggregator import hydrate as pkg_hydrate
 
     assert callable(pkg_hydrate)
 

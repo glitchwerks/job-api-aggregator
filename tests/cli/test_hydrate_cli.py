@@ -23,8 +23,8 @@ from unittest.mock import patch
 
 import pytest
 
-from job_aggregator.cli import hydrate as hydrate_cmd
-from job_aggregator.cli.__main__ import _build_parser
+from job_api_aggregator.cli import hydrate as hydrate_cmd
+from job_api_aggregator.cli.__main__ import _build_parser
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -158,7 +158,7 @@ def test_run_exits_0_on_success(tmp_path: Path, capsys: pytest.CaptureFixture[st
     args = _parse_args(["hydrate", "--input", str(input_file)])
 
     with patch(
-        "job_aggregator.hydrator.scrape_description",
+        "job_api_aggregator.hydrator.scrape_description",
         return_value=(_LONG_TEXT, True),
     ):
         # Should NOT raise — successful run returns normally (exit 0)
@@ -178,7 +178,7 @@ def test_run_continue_on_error_exits_0_on_scrape_failure(
     args = _parse_args(["hydrate", "--input", str(input_file)])
 
     with patch(
-        "job_aggregator.hydrator.scrape_description",
+        "job_api_aggregator.hydrator.scrape_description",
         return_value=("short", False),
     ):
         # Should NOT raise SystemExit with non-zero code
@@ -199,7 +199,7 @@ def test_run_strict_exits_nonzero_on_scrape_failure(
     args = _parse_args(["hydrate", "--strict", "--input", str(input_file)])
 
     with patch(
-        "job_aggregator.hydrator.scrape_description",
+        "job_api_aggregator.hydrator.scrape_description",
         return_value=("short", False),
     ):
         with pytest.raises(SystemExit) as exc_info:
@@ -239,7 +239,7 @@ def test_run_reads_from_input_file(tmp_path: Path) -> None:
     args = _parse_args(["hydrate", "--input", str(input_file), "--output", str(output_file)])
 
     with patch(
-        "job_aggregator.hydrator.scrape_description",
+        "job_api_aggregator.hydrator.scrape_description",
         return_value=(_LONG_TEXT, True),
     ):
         hydrate_cmd.run(args)
@@ -259,7 +259,7 @@ def test_run_writes_to_output_file(tmp_path: Path) -> None:
     args = _parse_args(["hydrate", "--input", str(input_file), "--output", str(output_file)])
 
     with patch(
-        "job_aggregator.hydrator.scrape_description",
+        "job_api_aggregator.hydrator.scrape_description",
         return_value=(_LONG_TEXT, True),
     ):
         hydrate_cmd.run(args)
@@ -293,7 +293,7 @@ def test_run_explicit_json_format_produces_envelope(tmp_path: Path) -> None:
     )
 
     with patch(
-        "job_aggregator.hydrator.scrape_description",
+        "job_api_aggregator.hydrator.scrape_description",
         return_value=(_LONG_TEXT, True),
     ):
         hydrate_cmd.run(args)
@@ -323,7 +323,7 @@ def test_run_explicit_jsonl_format_produces_lines(tmp_path: Path) -> None:
     )
 
     with patch(
-        "job_aggregator.hydrator.scrape_description",
+        "job_api_aggregator.hydrator.scrape_description",
         return_value=(_LONG_TEXT, True),
     ):
         hydrate_cmd.run(args)
@@ -347,7 +347,7 @@ def test_verbosity_flags_accepted(flag: str, tmp_path: Path) -> None:
     args = _parse_args(["hydrate", "--input", str(input_file), flag])
 
     with patch(
-        "job_aggregator.hydrator.scrape_description",
+        "job_api_aggregator.hydrator.scrape_description",
         return_value=(_LONG_TEXT, True),
     ):
         # Should not raise
@@ -371,7 +371,7 @@ def test_timeout_per_request_forwarded(tmp_path: Path) -> None:
 
     args = _parse_args(["hydrate", "--timeout-per-request", "7", "--input", str(input_file)])
 
-    with patch("job_aggregator.cli.hydrate.hydrate") as mock_hydrate:
+    with patch("job_api_aggregator.cli.hydrate.hydrate") as mock_hydrate:
         mock_hydrate.return_value = _jsonl_input([rec])
         hydrate_cmd.run(args)
 
@@ -388,7 +388,7 @@ def test_timeout_total_forwarded(tmp_path: Path) -> None:
 
     args = _parse_args(["hydrate", "--timeout-total", "60", "--input", str(input_file)])
 
-    with patch("job_aggregator.cli.hydrate.hydrate") as mock_hydrate:
+    with patch("job_api_aggregator.cli.hydrate.hydrate") as mock_hydrate:
         mock_hydrate.return_value = _jsonl_input([rec])
         hydrate_cmd.run(args)
 

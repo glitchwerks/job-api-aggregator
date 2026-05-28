@@ -1,4 +1,4 @@
-"""Tests for the job_aggregator exception hierarchy.
+"""Tests for the job_api_aggregator exception hierarchy.
 
 Every exception class must:
 - Inherit from JobAggregatorError
@@ -7,7 +7,7 @@ Every exception class must:
 - Produce a useful __str__ representation
 """
 
-from job_aggregator.errors import (
+from job_api_aggregator.errors import (
     CredentialsError,
     JobAggregatorError,
     PluginConflictError,

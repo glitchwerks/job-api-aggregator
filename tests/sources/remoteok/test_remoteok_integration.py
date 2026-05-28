@@ -17,7 +17,7 @@ from __future__ import annotations
 
 import pytest
 
-from job_aggregator.plugins.remoteok import Plugin
+from job_api_aggregator.plugins.remoteok import Plugin
 
 
 @pytest.mark.vcr()
