@@ -12,10 +12,14 @@ ignored; ``search`` is captured on ``last_search`` for test assertions.
 from __future__ import annotations
 
 from collections.abc import Iterator
+from datetime import UTC, datetime
 from typing import Any, ClassVar, Literal
 
 from job_aggregator.base import JobSource
 from job_aggregator.schema import SearchParams
+
+#: Sentinel that tells ``_make_record`` to generate a recent timestamp.
+_RECENT: str = "__recent__"
 
 
 def _make_record(
@@ -24,9 +28,13 @@ def _make_record(
     *,
     title: str | None = None,
     url: str = "",
-    posted_at: str | None = "2026-04-01T00:00:00Z",
+    posted_at: str | None = _RECENT,
 ) -> dict[str, Any]:
     """Return a minimal normalise()-compatible dict for stub plugins.
+
+    The default ``posted_at`` is the current UTC time (always within any
+    reasonable lookback window).  Pass an explicit ISO 8601 string, an
+    empty string, or ``None`` to override.
 
     Args:
         source: The SOURCE key of the stub plugin.
@@ -34,11 +42,15 @@ def _make_record(
         title: Optional title override; defaults to
             ``"Stub Job <source>-<idx>"``.
         url: Optional URL override.
-        posted_at: Optional posted_at override.
+        posted_at: Optional posted_at override.  Use ``None`` for a
+            null timestamp, an ISO 8601 string for a specific time, or
+            leave unset to receive the current UTC time.
 
     Returns:
         A dict conforming to the ``normalise()`` output contract.
     """
+    if posted_at is _RECENT:
+        posted_at = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
     return {
         "source": source,
         "source_id": f"{source}-{idx}",
