@@ -58,12 +58,49 @@ envelope with `"jobs": []`; every subsequent line is a single record.
 | `command` | string | `"jobs"` or `"hydrate"`, depending on which command produced the output. |
 | `sources_used` | array of strings | Plugin keys that returned at least one result. |
 | `sources_failed` | array of strings | Plugin keys that raised an error; their listings are absent. |
-| `request_summary` | object | The search parameters used for this run. |
+| `request_summary` | object | The search parameters used for this run. See [request_summary fields](#request_summary-fields) below. |
 | `jobs` | array | Present in JSON format only; empty array in JSONL envelope line. |
 
 `hydrate` propagates the envelope from its input, updating `command` to
 `"hydrate"` and `generated_at` to the current time. The original
 `request_summary` is preserved unchanged.
+
+### `request_summary` fields
+
+| Field | Type | Description |
+|---|---|---|
+| `hours` | integer | Lookback window in hours as specified by `--hours` (default 168). |
+| `query` | string \| null | Free-text search query, or `null` if none was given. |
+| `location` | string \| null | Location hint, or `null` if none was given. |
+| `country` | string \| null | ISO 3166-1 alpha-2 country code, or `null`. |
+| `sources` | array of strings | Plugin keys that were enabled for this run (before any per-source errors). |
+| `records_filtered_by_hours` | integer | Count of records dropped because their `posted_at` was older than the `hours` cutoff. See [Hours Filter Semantics](#hours-filter-semantics) below. |
+
+### Hours Filter Semantics
+
+The `--hours` flag (default 168, i.e. one week) controls a post-fetch
+filter applied by the orchestrator after all plugin records have been
+normalised and before deduplication.
+
+**Cutoff computation:** `cutoff = now_utc - timedelta(hours=hours)`.
+
+**Filter policy per record:**
+
+| `posted_at` value | Action |
+|---|---|
+| Parseable RFC 3339 UTC timestamp, `>= cutoff` | **Kept** |
+| Parseable RFC 3339 UTC timestamp, `< cutoff` | **Dropped** |
+| `null` (absent or `None`) | **Kept** — soft-filter policy |
+| Non-empty but unparseable string | **Kept** — soft-filter policy |
+
+**Soft-filter policy (null / unparseable):** Records whose `posted_at`
+cannot be parsed are retained rather than dropped. This preserves recall
+for sources that frequently omit `posted_at` (e.g. Remotive). The
+trade-off is documented here so consumers can decide whether to apply
+their own strict filter downstream.
+
+`records_filtered_by_hours` counts only **dropped** records.  Kept
+null/unparseable records do **not** increment this counter.
 
 ---
 

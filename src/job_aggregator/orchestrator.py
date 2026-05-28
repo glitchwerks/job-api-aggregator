@@ -22,7 +22,9 @@ Public API:
 from __future__ import annotations
 
 import json
+import logging
 import sys
+from datetime import UTC, datetime, timedelta
 from typing import Any
 from urllib.parse import urlparse, urlunparse
 
@@ -117,6 +119,88 @@ def _build_query_applied(
         Dict mapping plugin key → ``bool``.
     """
     return {key: cls.ACCEPTS_QUERY == "always" for key, cls in plugin_classes.items()}
+
+
+# ---------------------------------------------------------------------------
+# Hours-filter helpers
+# ---------------------------------------------------------------------------
+
+_UTC = UTC
+
+_log = logging.getLogger(__name__)
+
+
+def _parse_posted_at(posted_at: str | None) -> datetime | None:
+    """Parse an RFC 3339 UTC timestamp string into a timezone-aware datetime.
+
+    Accepts the common ``Z``-suffixed form as well as explicit ``+00:00``.
+    Returns ``None`` for ``None`` input, empty strings, or any string that
+    cannot be parsed — callers treat ``None`` as "unknown".
+
+    Args:
+        posted_at: An RFC 3339 UTC timestamp string (e.g.
+            ``"2026-04-01T00:00:00Z"``), or ``None`` / empty string.
+
+    Returns:
+        A timezone-aware :class:`~datetime.datetime` in UTC, or ``None``
+        if the value is absent or not parseable.
+    """
+    if not posted_at:
+        return None
+    # Normalise the trailing 'Z' to '+00:00' so fromisoformat accepts it
+    # on Python 3.10 and earlier (fromisoformat supports 'Z' from 3.11+).
+    normalised = posted_at.replace("Z", "+00:00")
+    try:
+        dt = datetime.fromisoformat(normalised)
+        # Ensure the result is timezone-aware; treat naive as UTC.
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=_UTC)
+        return dt
+    except (ValueError, OverflowError):
+        return None
+
+
+def _apply_hours_filter(
+    records: list[Any],
+    hours: int,
+    source_key: str,
+) -> tuple[list[Any], int]:
+    """Filter *records* to those within the *hours* lookback window.
+
+    Soft-filter policy: records with ``None`` or unparseable ``posted_at``
+    are **kept**; only records with a parseable timestamp strictly older
+    than ``cutoff`` are dropped.
+
+    Args:
+        records: Normalised :class:`~job_aggregator.schema.JobRecord` list
+            from a single source.
+        hours: Lookback window in hours.  ``cutoff = now_utc - hours``.
+        source_key: Plugin key used only for the summary log line.
+
+    Returns:
+        A 2-tuple of ``(kept_records, drop_count)`` where *drop_count* is
+        the number of records that were dropped.
+    """
+    cutoff = datetime.now(_UTC) - timedelta(hours=hours)
+    kept: list[Any] = []
+    dropped = 0
+    for record in records:
+        dt = _parse_posted_at(record.get("posted_at"))
+        if dt is None:
+            # Null / unparseable → keep (soft-filter policy)
+            kept.append(record)
+        elif dt >= cutoff:
+            kept.append(record)
+        else:
+            dropped += 1
+    if dropped:
+        _log.info(
+            "source %r: dropped %d record(s) older than %d-hour cutoff",
+            source_key,
+            dropped,
+            hours,
+        )
+    return kept, dropped
 
 
 # ---------------------------------------------------------------------------
@@ -288,28 +372,39 @@ def run_jobs(
     records: list[JobRecord] = []
     sources_used: list[str] = []
     sources_failed: list[str] = []
+    total_filtered_by_hours: int = 0
 
     for key, cls in enabled.items():
         source_creds: dict[str, Any] = creds.get(key, {})
         try:
             plugin = _instantiate_plugin(cls, source_creds, search_params)
-            source_had_records = False
+            # Collect all normalised records for this source before dedup
+            # so the hours filter sees the full set (not limit-capped).
+            source_records: list[JobRecord] = []
             for page in plugin.pages():
                 for raw in page:
                     normalised_raw = plugin.normalise(raw)
                     record = normalize(normalised_raw)
-                    # Dedup
-                    dedup_key = (record["source"], record["source_id"])
-                    if dedup_key in seen:
-                        continue
-                    seen.add(dedup_key)
-                    records.append(record)
-                    source_had_records = True
-                    # Respect limit
-                    if limit > 0 and len(records) >= limit:
-                        break
+                    source_records.append(record)
+
+            # ----------------------------------------------------------
+            # Apply hours filter (post-fetch, per-source)
+            # ----------------------------------------------------------
+            source_records, dropped = _apply_hours_filter(source_records, hours, key)
+            total_filtered_by_hours += dropped
+
+            # Dedup + limit
+            source_had_records = False
+            for record in source_records:
+                dedup_key = (record["source"], record["source_id"])
+                if dedup_key in seen:
+                    continue
+                seen.add(dedup_key)
+                records.append(record)
+                source_had_records = True
                 if limit > 0 and len(records) >= limit:
                     break
+
             if not sources_used or key not in sources_used:
                 sources_used.append(key)
             _ = source_had_records  # suppress unused warning
@@ -327,7 +422,12 @@ def run_jobs(
             break
 
     # ------------------------------------------------------------------
-    # 8. Serialise and return
+    # 8. Augment request_summary with hours-filter observability count
+    # ------------------------------------------------------------------
+    request_summary["records_filtered_by_hours"] = total_filtered_by_hours
+
+    # ------------------------------------------------------------------
+    # 9. Serialise and return
     # ------------------------------------------------------------------
     return _serialise(
         jobs=records,
