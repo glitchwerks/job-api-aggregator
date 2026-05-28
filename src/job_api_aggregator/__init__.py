@@ -1,4 +1,4 @@
-"""job-aggregator — reusable job aggregation library.
+"""job-api-aggregator — reusable job aggregation library.
 
 Provides pluggable source plugins, normalized job-record output,
 and a structured CLI.  No scoring, no database, no LLM dependencies.

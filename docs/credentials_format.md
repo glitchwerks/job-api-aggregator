@@ -140,8 +140,26 @@ job-api-aggregator jobs \
 ```
 
 Plugins without a credentials entry in the file are still run if they do not
-require credentials (e.g. `remoteok`, `himalayas`). To restrict which plugins
-run, use the `JOB_SCRAPER_DISABLE_PLUGINS` environment variable:
+require credentials (e.g. `remoteok`, `himalayas`).
+
+To restrict which plugins run on a given invocation, use the `--sources` and
+`--exclude-sources` CLI flags:
+
+```bash
+# Run only adzuna and jooble
+job-api-aggregator jobs --query "python developer" --credentials creds.json \
+  --sources adzuna,jooble
+
+# Run all configured sources except the_muse and usajobs
+job-api-aggregator jobs --query "python developer" --credentials creds.json \
+  --exclude-sources the_muse,usajobs
+```
+
+The `JOB_SCRAPER_DISABLE_PLUGINS` environment variable provides a persistent
+override — plugins listed there are excluded from every run regardless of
+`--sources`. This is useful for suppressing a broken or rate-limited source
+across multiple invocations without editing your credentials file, or for
+resolving collisions when two registered plugins share a key:
 
 ```bash
 export JOB_SCRAPER_DISABLE_PLUGINS="the_muse,usajobs"

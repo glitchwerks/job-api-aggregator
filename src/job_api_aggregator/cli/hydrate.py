@@ -1,4 +1,4 @@
-"""CLI subcommand: job-aggregator hydrate.
+"""CLI subcommand: job-api-aggregator hydrate.
 
 Reads job records from stdin or a file, scrapes full descriptions for each
 record, and emits enriched records (spec §8.2 / Phase E, Issue #17).
@@ -206,7 +206,7 @@ def run(args: argparse.Namespace) -> None:
             raw = Path(input_path).read_text(encoding="utf-8")
         except OSError as exc:
             print(
-                f"job-aggregator hydrate: cannot read input file {input_path!r}: {exc}",
+                f"job-api-aggregator hydrate: cannot read input file {input_path!r}: {exc}",
                 file=sys.stderr,
             )
             sys.exit(1)
@@ -228,13 +228,13 @@ def run(args: argparse.Namespace) -> None:
         output = hydrate(StringIO(raw), config)
     except SchemaVersionError as exc:
         print(
-            f"job-aggregator hydrate: {exc}",
+            f"job-api-aggregator hydrate: {exc}",
             file=sys.stderr,
         )
         sys.exit(4)
     except Exception as exc:
         print(
-            f"job-aggregator hydrate: unexpected error: {exc}",
+            f"job-api-aggregator hydrate: unexpected error: {exc}",
             file=sys.stderr,
         )
         sys.exit(2)
@@ -248,7 +248,7 @@ def run(args: argparse.Namespace) -> None:
             Path(output_path).write_text(output + "\n", encoding="utf-8")
         except OSError as exc:
             print(
-                f"job-aggregator hydrate: cannot write output file {output_path!r}: {exc}",
+                f"job-api-aggregator hydrate: cannot write output file {output_path!r}: {exc}",
                 file=sys.stderr,
             )
             sys.exit(1)

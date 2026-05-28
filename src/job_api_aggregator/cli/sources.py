@@ -1,4 +1,4 @@
-"""CLI subcommand: job-aggregator sources.
+"""CLI subcommand: job-api-aggregator sources.
 
 Emits a JSON document describing every registered plugin per spec §8.3.
 When ``--credentials PATH`` is provided, each plugin entry also carries a
@@ -136,7 +136,7 @@ def _load_credentials(path: str) -> dict[str, Any]:
         raw = creds_path.read_text(encoding="utf-8")
     except OSError as exc:
         print(
-            f"job-aggregator sources: cannot read credentials file {path!r}: {exc}",
+            f"job-api-aggregator sources: cannot read credentials file {path!r}: {exc}",
             file=sys.stderr,
         )
         sys.exit(1)
@@ -145,14 +145,14 @@ def _load_credentials(path: str) -> dict[str, Any]:
         data: Any = json.loads(raw)
     except json.JSONDecodeError as exc:
         print(
-            f"job-aggregator sources: credentials file {path!r} is not valid JSON: {exc}",
+            f"job-api-aggregator sources: credentials file {path!r} is not valid JSON: {exc}",
             file=sys.stderr,
         )
         sys.exit(1)
 
     if not isinstance(data, dict):
         print(
-            f"job-aggregator sources: credentials file {path!r} must contain a JSON object.",
+            f"job-api-aggregator sources: credentials file {path!r} must contain a JSON object.",
             file=sys.stderr,
         )
         sys.exit(1)

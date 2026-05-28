@@ -1,4 +1,4 @@
-"""Remotive source plugin for job-aggregator.
+"""Remotive source plugin for job-api-aggregator.
 
 Wraps the public Remotive remote-jobs API (https://remotive.com/api/remote-jobs).
 No authentication is required.  The API returns a single page of results;

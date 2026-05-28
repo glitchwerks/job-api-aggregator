@@ -1,4 +1,4 @@
-"""Plugin registry — introspection API for registered job-aggregator plugins.
+"""Plugin registry — introspection API for registered job-api-aggregator plugins.
 
 Provides three public functions that form the core of the Phase F
 introspection surface:

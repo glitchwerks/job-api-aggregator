@@ -1,4 +1,4 @@
-"""Envelope generator for job-aggregator output (spec §9.2).
+"""Envelope generator for job-api-aggregator output (spec §9.2).
 
 Produces the top-level JSON envelope that wraps a collection of
 :class:`~job_api_aggregator.schema.JobRecord` dicts, and provides a JSONL
