@@ -125,6 +125,4 @@ jobs:
         run: uv sync --group dev
 
       - name: Audit dependencies
-        # CVE-2026-3219 in pip itself has no fix version available.
-        # Tracked in issue #48; ignore will be removed once pip ships a fix.
-        run: uv run pip-audit --ignore-vuln CVE-2026-3219
+        run: uv run pip-audit
