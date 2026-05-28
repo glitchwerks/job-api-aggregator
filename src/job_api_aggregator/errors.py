@@ -15,7 +15,7 @@ class JobAggregatorError(Exception):
 class PluginConflictError(JobAggregatorError):
     """Two registrations claim the same plugin SOURCE key.
 
-    Raised by :func:`job_aggregator.auto_register.discover_plugins` when
+    Raised by :func:`job_api_aggregator.auto_register.discover_plugins` when
     the entry-point scan finds duplicate ``SOURCE`` values across different
     distribution packages or entry-point names.  The error is fatal: the
     ambiguity must be resolved by the user (uninstall the duplicate or add
@@ -61,7 +61,7 @@ class ScrapeError(JobAggregatorError):
     """HTTP or parse failure while scraping a job description URL.
 
     Raised (or stored and emitted) by
-    :func:`job_aggregator.scraping.scrape_description` when the HTTP
+    :func:`job_api_aggregator.scraping.scrape_description` when the HTTP
     request fails or the response body cannot be parsed.
 
     Attributes:

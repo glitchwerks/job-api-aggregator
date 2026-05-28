@@ -2,13 +2,13 @@
 
 This module is intentionally free of side effects on import.  The
 :func:`discover_plugins` function must be called explicitly by the
-registry (:mod:`job_aggregator.registry`, Issue F) or by tests.
+registry (:mod:`job_api_aggregator.registry`, Issue F) or by tests.
 
 Collision policy (spec §6):
     When two registrations resolve to the same ``SOURCE`` key (detected
     by loading each entry-point's class and reading its ``SOURCE``
     attribute — NOT by entry-point name alone), a
-    :exc:`~job_aggregator.errors.PluginConflictError` is raised listing
+    :exc:`~job_api_aggregator.errors.PluginConflictError` is raised listing
     both registration sources.  No silent first-wins or last-wins.
 
 Disable mechanism:
@@ -23,14 +23,14 @@ from __future__ import annotations
 import os
 from importlib.metadata import entry_points
 
-from job_aggregator.base import JobSource
-from job_aggregator.errors import PluginConflictError
+from job_api_aggregator.base import JobSource
+from job_api_aggregator.errors import PluginConflictError
 
 # ---------------------------------------------------------------------------
 # Entry-point group name (must match pyproject.toml)
 # ---------------------------------------------------------------------------
 
-_PLUGIN_GROUP = "job_aggregator.plugins"
+_PLUGIN_GROUP = "job_api_aggregator.plugins"
 
 # ---------------------------------------------------------------------------
 # Public API
@@ -38,15 +38,15 @@ _PLUGIN_GROUP = "job_aggregator.plugins"
 
 
 def discover_plugins() -> dict[str, type[JobSource]]:
-    """Discover and return all registered :class:`~job_aggregator.base.JobSource` plugins.
+    """Discover and return all registered :class:`~job_api_aggregator.base.JobSource` plugins.
 
-    Reads entry-points from the ``job_aggregator.plugins`` group,
+    Reads entry-points from the ``job_api_aggregator.plugins`` group,
     loads each class, and indexes the result by the class's ``SOURCE``
     attribute.
 
     Collision detection (spec §6):
         If two entry-points load classes that share the same ``SOURCE``
-        key a :exc:`~job_aggregator.errors.PluginConflictError` is raised
+        key a :exc:`~job_api_aggregator.errors.PluginConflictError` is raised
         listing *both* registration sources in the form
         ``"<dist-name>::<entry-point-name>"``.  This is evaluated
         **before** any disable filtering so that mis-configured packages

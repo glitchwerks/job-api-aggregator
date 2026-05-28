@@ -31,8 +31,8 @@ from typing import Any
 import requests
 from bs4 import BeautifulSoup
 
-from job_aggregator.base import JobSource
-from job_aggregator.schema import SearchParams
+from job_api_aggregator.base import JobSource
+from job_api_aggregator.schema import SearchParams
 
 logger = logging.getLogger(__name__)
 
@@ -94,7 +94,7 @@ class Plugin(JobSource):
             credentials: Optional dict.  If it contains an ``"api_key"``
                 key that is non-empty, the key is sent with every request
                 to reduce rate-limiting.
-            search: :class:`~job_aggregator.schema.SearchParams` instance.
+            search: :class:`~job_api_aggregator.schema.SearchParams` instance.
                 ``query`` is mapped to the category filter; ``max_pages``
                 caps the page count.  Location and country are ignored.
         """
@@ -233,7 +233,7 @@ class Plugin(JobSource):
         results.
 
         Yields:
-            A list of normalised :class:`~job_aggregator.schema.JobRecord`
+            A list of normalised :class:`~job_api_aggregator.schema.JobRecord`
             dicts for each page.  Each element has already been passed
             through :meth:`normalise`.
         """
@@ -299,7 +299,7 @@ class Plugin(JobSource):
 
         Returns:
             A normalised dict conforming to the
-            :class:`~job_aggregator.schema.JobRecord` TypedDict contract.
+            :class:`~job_api_aggregator.schema.JobRecord` TypedDict contract.
         """
         company_obj: dict[str, Any] = raw.get("company") or {}
         company: str = company_obj.get("name") or ""

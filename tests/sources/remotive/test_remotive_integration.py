@@ -13,8 +13,8 @@ from __future__ import annotations
 
 import pytest
 
-from job_aggregator.plugins.remotive import Plugin
-from job_aggregator.schema import SearchParams
+from job_api_aggregator.plugins.remotive import Plugin
+from job_api_aggregator.schema import SearchParams
 
 
 @pytest.mark.vcr()

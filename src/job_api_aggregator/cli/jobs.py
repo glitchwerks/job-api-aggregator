@@ -15,7 +15,7 @@ This module follows the same conflict-friendly dispatcher pattern as
 
 The dispatcher wires this in with two lines::
 
-    from job_aggregator.cli import jobs as _jobs_cmd
+    from job_api_aggregator.cli import jobs as _jobs_cmd
     _jobs_cmd.register(subparsers)
 
 Credentials are optional (#50)
@@ -34,8 +34,8 @@ import json
 import sys
 from typing import Any
 
-from job_aggregator.registry import list_plugins
-from job_aggregator.schema import PluginInfo
+from job_api_aggregator.registry import list_plugins
+from job_api_aggregator.schema import PluginInfo
 
 # ---------------------------------------------------------------------------
 # Public subcommand API
@@ -229,7 +229,7 @@ def run(ns: argparse.Namespace) -> None:
     Resolves credentials (loading from file when ``--credentials`` is
     supplied, or using an empty dict when all selected sources are
     no-auth), then delegates to
-    :func:`~job_aggregator.orchestrator.run_jobs` and writes the result
+    :func:`~job_api_aggregator.orchestrator.run_jobs` and writes the result
     to stdout (or the file named by ``--output``).
 
     When ``--credentials`` is omitted but one or more selected sources
@@ -239,7 +239,7 @@ def run(ns: argparse.Namespace) -> None:
     Args:
         ns: Parsed :class:`argparse.Namespace` from the ``jobs`` subparser.
     """
-    from job_aggregator.orchestrator import run_jobs
+    from job_api_aggregator.orchestrator import run_jobs
 
     # Parse comma-separated source lists (needed for creds check too)
     sources: list[str] | None = None

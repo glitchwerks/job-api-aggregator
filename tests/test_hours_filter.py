@@ -18,8 +18,8 @@ from typing import Any, ClassVar, Literal
 
 import pytest
 
-from job_aggregator.base import JobSource
-from job_aggregator.schema import SearchParams
+from job_api_aggregator.base import JobSource
+from job_api_aggregator.schema import SearchParams
 from tests.fixtures.plugins.stub_plugins import _make_record
 
 # ---------------------------------------------------------------------------
@@ -75,7 +75,7 @@ def _import_run_jobs() -> Any:
     Returns:
         The ``run_jobs`` callable.
     """
-    from job_aggregator.orchestrator import run_jobs
+    from job_api_aggregator.orchestrator import run_jobs
 
     return run_jobs
 

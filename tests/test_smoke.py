@@ -1,4 +1,4 @@
-"""Smoke tests for the job_aggregator package.
+"""Smoke tests for the job_api_aggregator package.
 
 These are placeholder tests that verify the package installs
 correctly and exposes the minimum expected public surface.
@@ -13,7 +13,7 @@ def test_package_imports() -> None:
     pyproject.toml metadata, broken __init__, or missing
     importlib.metadata entry) before any functional code is written.
     """
-    import job_aggregator
+    import job_api_aggregator
 
-    assert isinstance(job_aggregator.__version__, str), "__version__ must be a string"
-    assert job_aggregator.__version__, "__version__ must be a non-empty string"
+    assert isinstance(job_api_aggregator.__version__, str), "__version__ must be a string"
+    assert job_api_aggregator.__version__, "__version__ must be a non-empty string"

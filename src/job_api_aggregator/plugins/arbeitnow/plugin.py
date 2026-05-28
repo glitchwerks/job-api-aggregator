@@ -17,9 +17,9 @@ from typing import Any, ClassVar
 import requests
 from bs4 import BeautifulSoup
 
-from job_aggregator.base import JobSource
-from job_aggregator.errors import ScrapeError
-from job_aggregator.schema import SearchParams
+from job_api_aggregator.base import JobSource
+from job_api_aggregator.errors import ScrapeError
+from job_api_aggregator.schema import SearchParams
 
 logger = logging.getLogger(__name__)
 
@@ -121,7 +121,7 @@ class Plugin(JobSource):
 
         Args:
             credentials: Accepted for interface uniformity; not used.
-            search: :class:`~job_aggregator.schema.SearchParams` carrying
+            search: :class:`~job_api_aggregator.schema.SearchParams` carrying
                 ``max_pages``.  All other search fields are ignored
                 because the Arbeitnow API has no query, location, or
                 country filter.
@@ -204,7 +204,7 @@ class Plugin(JobSource):
             raw: A single entry from the Arbeitnow ``data`` array.
 
         Returns:
-            A dict conforming to the :class:`~job_aggregator.schema.JobRecord`
+            A dict conforming to the :class:`~job_api_aggregator.schema.JobRecord`
             TypedDict contract.
         """
         # --- location: prefer explicit string; fall back to "Remote" ---

@@ -4,12 +4,12 @@ Provides three public functions that form the core of the Phase F
 introspection surface:
 
 - :func:`list_plugins` — enumerate all registered plugins as
-  :class:`~job_aggregator.schema.PluginInfo` objects.
+  :class:`~job_api_aggregator.schema.PluginInfo` objects.
 - :func:`get_plugin` — look up a single plugin by its ``SOURCE`` key.
 - :func:`make_enabled_sources` — instantiate plugins whose required
   credentials are present in the provided credentials dict.
 
-All three functions call :func:`~job_aggregator.auto_register.discover_plugins`
+All three functions call :func:`~job_api_aggregator.auto_register.discover_plugins`
 on each invocation; no module-level singleton is kept so that tests can
 cleanly patch ``discover_plugins`` without import-order side effects.
 """
@@ -19,10 +19,10 @@ from __future__ import annotations
 import logging
 from typing import Any
 
-from job_aggregator.auto_register import discover_plugins
-from job_aggregator.base import JobSource
-from job_aggregator.errors import CredentialsError
-from job_aggregator.schema import PluginField, PluginInfo, SearchParams
+from job_api_aggregator.auto_register import discover_plugins
+from job_api_aggregator.base import JobSource
+from job_api_aggregator.errors import CredentialsError
+from job_api_aggregator.schema import PluginField, PluginInfo, SearchParams
 
 logger = logging.getLogger(__name__)
 
@@ -35,11 +35,11 @@ def _build_plugin_info(cls: type[JobSource]) -> PluginInfo:
     """Build a :class:`PluginInfo` from a :class:`JobSource` subclass.
 
     Reads the class-level metadata attributes and calls
-    :meth:`~job_aggregator.base.JobSource.settings_schema` on a transient
+    :meth:`~job_api_aggregator.base.JobSource.settings_schema` on a transient
     instance to obtain the field definitions.
 
     Args:
-        cls: A concrete :class:`~job_aggregator.base.JobSource` subclass.
+        cls: A concrete :class:`~job_api_aggregator.base.JobSource` subclass.
 
     Returns:
         A fully populated :class:`PluginInfo` dataclass.
@@ -114,7 +114,7 @@ def list_plugins() -> list[PluginInfo]:
     """Return a :class:`PluginInfo` for every registered plugin, sorted by key.
 
     Discovers plugins via entry-points (see
-    :func:`~job_aggregator.auto_register.discover_plugins`) and builds a
+    :func:`~job_api_aggregator.auto_register.discover_plugins`) and builds a
     :class:`PluginInfo` for each one.  Results are sorted alphabetically
     by :attr:`PluginInfo.key` for stable output.
 
@@ -124,7 +124,7 @@ def list_plugins() -> list[PluginInfo]:
 
     Raises:
         PluginConflictError: Propagated from
-            :func:`~job_aggregator.auto_register.discover_plugins` when
+            :func:`~job_api_aggregator.auto_register.discover_plugins` when
             two registrations claim the same ``SOURCE`` key.
     """
     plugins = discover_plugins()
@@ -147,7 +147,7 @@ def get_plugin(key: str) -> PluginInfo | None:
 
     Raises:
         PluginConflictError: Propagated from
-            :func:`~job_aggregator.auto_register.discover_plugins` when
+            :func:`~job_api_aggregator.auto_register.discover_plugins` when
             two registrations claim the same ``SOURCE`` key.
     """
     plugins = discover_plugins()
@@ -172,7 +172,7 @@ def make_enabled_sources(
     that were written before this registry API existed (and therefore
     have different constructor signatures) should be wrapped or updated
     to accept this convention.  If instantiation raises
-    :exc:`~job_aggregator.errors.CredentialsError` the plugin is silently
+    :exc:`~job_api_aggregator.errors.CredentialsError` the plugin is silently
     dropped; a :exc:`TypeError` from a mismatched constructor is logged
     and the plugin is also dropped.
 
@@ -183,13 +183,13 @@ def make_enabled_sources(
         search: The search parameters to pass to each plugin constructor.
 
     Returns:
-        A list of instantiated :class:`~job_aggregator.base.JobSource`
+        A list of instantiated :class:`~job_api_aggregator.base.JobSource`
         objects that are ready to run, in alphabetical order by plugin
         key.
 
     Raises:
         PluginConflictError: Propagated from
-            :func:`~job_aggregator.auto_register.discover_plugins` when
+            :func:`~job_api_aggregator.auto_register.discover_plugins` when
             two registrations claim the same ``SOURCE`` key.
     """
     plugins = discover_plugins()

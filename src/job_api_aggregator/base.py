@@ -10,8 +10,8 @@ Example::
     from collections.abc import Iterator
     from typing import Any
 
-    from job_aggregator.base import JobSource
-    from job_aggregator.schema import SearchParams
+    from job_api_aggregator.base import JobSource
+    from job_api_aggregator.schema import SearchParams
 
 
     class MySource(JobSource):
@@ -61,7 +61,7 @@ from collections.abc import Iterator
 from typing import TYPE_CHECKING, Any, ClassVar, Literal
 
 if TYPE_CHECKING:
-    from job_aggregator.schema import SearchParams
+    from job_api_aggregator.schema import SearchParams
 
 # ---------------------------------------------------------------------------
 # Required class-level attribute names — enforced by __init_subclass__
@@ -118,7 +118,7 @@ class JobSource(abc.ABC):
             filter in its API.
         RATE_LIMIT_NOTES: Human-readable rate-limit information for the
             source (e.g. ``"1 req/sec, 250/day on free tier"``).
-        REQUIRED_SEARCH_FIELDS: Tuple of :class:`~job_aggregator.schema.SearchParams`
+        REQUIRED_SEARCH_FIELDS: Tuple of :class:`~job_api_aggregator.schema.SearchParams`
             field names that must be non-``None`` for the plugin to run
             successfully (e.g. ``("country",)``).  Defaults to ``()``.
     """
@@ -156,7 +156,7 @@ class JobSource(abc.ABC):
         Args:
             credentials: Credentials dict for the plugin (may be
                 ``None`` for no-auth plugins).
-            search: :class:`~job_aggregator.schema.SearchParams` instance
+            search: :class:`~job_api_aggregator.schema.SearchParams` instance
                 carrying the user's search query, location, country,
                 hours, and page-count preferences.  May be ``None`` when
                 no search parameters are provided.
@@ -208,7 +208,8 @@ class JobSource(abc.ABC):
     @classmethod
     @abc.abstractmethod
     def settings_schema(cls) -> dict[str, Any]:
-        """Return the field definitions used to build :class:`~job_aggregator.schema.PluginInfo`.
+        """Return the field definitions used to build
+        :class:`~job_api_aggregator.schema.PluginInfo`.
 
         Declared as a ``@classmethod`` so callers can introspect a plugin's
         schema without constructing an instance.  Concrete subclasses must
@@ -251,7 +252,7 @@ class JobSource(abc.ABC):
     def normalise(self, raw: dict[str, Any]) -> dict[str, Any]:
         """Map a raw source-API dict to the package's normalised record shape.
 
-        The returned dict should conform to the :class:`~job_aggregator.schema.JobRecord`
+        The returned dict should conform to the :class:`~job_api_aggregator.schema.JobRecord`
         TypedDict contract.  In particular it must include the identity
         fields ``source``, ``source_id``, and ``description_source``, and
         the always-present fields ``title``, ``url``, ``posted_at``, and
@@ -261,6 +262,6 @@ class JobSource(abc.ABC):
             raw: A single raw listing dict as yielded by :meth:`pages`.
 
         Returns:
-            A normalised dict ready for output as a :class:`~job_aggregator.schema.JobRecord`.
+            A normalised dict ready for output as a :class:`~job_api_aggregator.schema.JobRecord`.
         """
         ...

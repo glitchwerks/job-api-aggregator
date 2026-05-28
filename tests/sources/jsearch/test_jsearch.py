@@ -8,9 +8,9 @@ from __future__ import annotations
 
 import pytest
 
-from job_aggregator.errors import CredentialsError
-from job_aggregator.plugins.jsearch import Plugin
-from job_aggregator.schema import SearchParams
+from job_api_aggregator.errors import CredentialsError
+from job_api_aggregator.plugins.jsearch import Plugin
+from job_api_aggregator.schema import SearchParams
 
 # ---------------------------------------------------------------------------
 # Helpers

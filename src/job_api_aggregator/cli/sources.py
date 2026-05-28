@@ -16,7 +16,7 @@ integration (spec §F shared-file coordination):
 
 The dispatcher only needs two lines to wire this in::
 
-    from job_aggregator.cli import sources as _sources_cmd
+    from job_api_aggregator.cli import sources as _sources_cmd
     _sources_cmd.register(subparsers)
 """
 
@@ -28,8 +28,8 @@ import sys
 from pathlib import Path
 from typing import Any
 
-from job_aggregator.registry import list_plugins
-from job_aggregator.schema import PluginInfo
+from job_api_aggregator.registry import list_plugins
+from job_api_aggregator.schema import PluginInfo
 
 # ---------------------------------------------------------------------------
 # JSON serialisation helpers
@@ -171,7 +171,7 @@ def register(subparsers: argparse._SubParsersAction[argparse.ArgumentParser]) ->
     Call this from the top-level dispatcher (``cli/__main__.py``) so that
     the ``sources`` subcommand is wired in with a single import::
 
-        from job_aggregator.cli import sources as _sources
+        from job_api_aggregator.cli import sources as _sources
         _sources.register(subparsers)
 
     Args:
@@ -203,7 +203,7 @@ def register(subparsers: argparse._SubParsersAction[argparse.ArgumentParser]) ->
 def run(args: argparse.Namespace) -> None:
     """Execute the sources subcommand.
 
-    Enumerates all registered plugins via :func:`~job_aggregator.registry.list_plugins`,
+    Enumerates all registered plugins via :func:`~job_api_aggregator.registry.list_plugins`,
     serialises them to the §8.3 JSON shape, and writes the result to
     stdout.
 

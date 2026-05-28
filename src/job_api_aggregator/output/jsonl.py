@@ -4,7 +4,7 @@ Produces a JSONL stream where:
 
 * **Line 1** — the §9.2 envelope dict with ``"jobs": []`` (records are
   *not* inlined into the envelope in JSONL mode).
-* **Lines 2+** — one :class:`~job_aggregator.schema.JobRecord` per line,
+* **Lines 2+** — one :class:`~job_api_aggregator.schema.JobRecord` per line,
   serialised as compact JSON (no trailing newline per line).
 
 This layout lets streaming consumers start processing records before the
@@ -20,8 +20,8 @@ from __future__ import annotations
 from collections.abc import Iterator
 from typing import Any
 
-from job_aggregator.envelope import build_jsonl_lines
-from job_aggregator.schema import JobRecord
+from job_api_aggregator.envelope import build_jsonl_lines
+from job_api_aggregator.schema import JobRecord
 
 
 def iter_jsonl_lines(
@@ -37,7 +37,7 @@ def iter_jsonl_lines(
 
     The first yielded line is the §9.2 envelope with ``"jobs": []`` and
     an optional ``"query_applied"`` field.  Each subsequent line is a
-    single :class:`~job_aggregator.schema.JobRecord` serialised as compact
+    single :class:`~job_api_aggregator.schema.JobRecord` serialised as compact
     JSON.
 
     Args:

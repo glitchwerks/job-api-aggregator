@@ -1,4 +1,4 @@
-"""Tests for job_aggregator.scraping — scrape_description and SCRAPE_MIN_LENGTH.
+"""Tests for job_api_aggregator.scraping — scrape_description and SCRAPE_MIN_LENGTH.
 
 Covers:
 - SCRAPE_MIN_LENGTH is a public int constant.
@@ -16,7 +16,7 @@ from __future__ import annotations
 
 import responses as resp
 
-from job_aggregator.scraping import SCRAPE_MIN_LENGTH, scrape_description
+from job_api_aggregator.scraping import SCRAPE_MIN_LENGTH, scrape_description
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -43,7 +43,7 @@ def test_scrape_min_length_is_public_int() -> None:
 
 def test_scrape_min_length_re_exported_from_package() -> None:
     """SCRAPE_MIN_LENGTH must still be importable from the package root."""
-    from job_aggregator import SCRAPE_MIN_LENGTH as PKG_MIN
+    from job_api_aggregator import SCRAPE_MIN_LENGTH as PKG_MIN
 
     assert PKG_MIN is SCRAPE_MIN_LENGTH
 

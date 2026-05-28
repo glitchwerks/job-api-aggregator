@@ -1,4 +1,4 @@
-"""Tests for the job_aggregator.normalizer module.
+"""Tests for the job_api_aggregator.normalizer module.
 
 Covers:
 - Round-trip serialization of JobRecord dicts.
@@ -18,12 +18,12 @@ from typing import Any
 
 import pytest
 
-from job_aggregator.normalizer import (
+from job_api_aggregator.normalizer import (
     SCRAPE_MIN_LENGTH,
     classify_description_source,
     normalize,
 )
-from job_aggregator.schema import JobRecord
+from job_api_aggregator.schema import JobRecord
 
 # ---------------------------------------------------------------------------
 # Fixtures / helpers

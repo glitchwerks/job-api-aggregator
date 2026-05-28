@@ -2,11 +2,11 @@
 
 Wraps the Adzuna Jobs REST API v1, handling pagination, rate-limit
 retry with exponential back-off, and normalisation to the package's
-canonical :class:`~job_aggregator.schema.JobRecord` shape.
+canonical :class:`~job_api_aggregator.schema.JobRecord` shape.
 
 Public surface::
 
-    from job_aggregator.plugins.adzuna import Plugin
+    from job_api_aggregator.plugins.adzuna import Plugin
 """
 
 from __future__ import annotations
@@ -18,9 +18,9 @@ from typing import Any, ClassVar
 
 import requests
 
-from job_aggregator.base import JobSource
-from job_aggregator.errors import CredentialsError, ScrapeError
-from job_aggregator.schema import SearchParams
+from job_api_aggregator.base import JobSource
+from job_api_aggregator.errors import CredentialsError, ScrapeError
+from job_api_aggregator.schema import SearchParams
 
 logger = logging.getLogger(__name__)
 
@@ -45,7 +45,7 @@ class Plugin(JobSource):
 
     Credentials are passed via the ``credentials`` keyword argument at
     construction time.  Missing or empty ``app_id`` / ``app_key`` raises
-    :exc:`~job_aggregator.errors.CredentialsError` immediately.
+    :exc:`~job_api_aggregator.errors.CredentialsError` immediately.
 
     Search parameters (``query``, ``country``, ``location``,
     ``max_pages``) are read from the ``search`` keyword argument.
@@ -89,7 +89,7 @@ class Plugin(JobSource):
         Args:
             credentials: Dict containing ``app_id`` and ``app_key``.
                 Both fields are required.
-            search: :class:`~job_aggregator.schema.SearchParams` carrying
+            search: :class:`~job_api_aggregator.schema.SearchParams` carrying
                 ``query``, ``country``, ``location``, and ``max_pages``.
 
         Raises:
@@ -207,7 +207,7 @@ class Plugin(JobSource):
             raw: A single entry from the Adzuna ``results`` array.
 
         Returns:
-            A dict conforming to :class:`~job_aggregator.schema.JobRecord`.
+            A dict conforming to :class:`~job_api_aggregator.schema.JobRecord`.
         """
         company_obj = raw.get("company")
         location_obj = raw.get("location")
@@ -292,7 +292,7 @@ class Plugin(JobSource):
 
         Retries on HTTP 429 with exponential back-off (2 s, 4 s, 8 s).
         Any other non-200 response is logged and raises
-        :exc:`~job_aggregator.errors.ScrapeError`.
+        :exc:`~job_api_aggregator.errors.ScrapeError`.
 
         Args:
             page: 1-based page number.

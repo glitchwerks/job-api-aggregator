@@ -9,7 +9,7 @@ Implements the ``hydrate`` command's core loop (spec §8.2, §9.2, §9.6):
    - Skip (warn) if ``url`` is absent, null, empty, or non-HTTP/HTTPS.
    - Skip (warn) if ``description_source`` is an unknown value.
    - Pass through unchanged if the total wall-clock budget is exhausted.
-4. For records that need scraping, call :func:`~job_aggregator.scraping.scrape_description`.
+4. For records that need scraping, call :func:`~job_api_aggregator.scraping.scrape_description`.
 5. Emit enriched records in the same format as the input (or as overridden
    by ``HydrateConfig.fmt``).
 6. Propagate the input envelope, updating ``command`` → ``"hydrate"`` and
@@ -31,9 +31,9 @@ from datetime import UTC, datetime
 from io import StringIO
 from typing import Any
 
-from job_aggregator.envelope import SCHEMA_VERSION, build_envelope, build_jsonl_lines
-from job_aggregator.errors import SchemaVersionError, ScrapeError
-from job_aggregator.scraping import scrape_description
+from job_api_aggregator.envelope import SCHEMA_VERSION, build_envelope, build_jsonl_lines
+from job_api_aggregator.errors import SchemaVersionError, ScrapeError
+from job_api_aggregator.scraping import scrape_description
 
 logger = logging.getLogger(__name__)
 
@@ -58,7 +58,7 @@ class HydrateConfig:
             or ``None`` for no limit (§8.2).
         continue_on_error: When ``True`` (default), scrape failures are
             logged and the record is passed through unchanged.
-        strict: When ``True``, raise :class:`~job_aggregator.errors.ScrapeError`
+        strict: When ``True``, raise :class:`~job_api_aggregator.errors.ScrapeError`
             on the first scrape failure (§8.2).
         fmt: Output format override — ``"json"``, ``"jsonl"``, or ``None``
             to infer from the input.

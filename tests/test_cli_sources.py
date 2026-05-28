@@ -17,8 +17,8 @@ from unittest.mock import patch
 
 import pytest
 
-from job_aggregator.cli.sources import register, run
-from job_aggregator.schema import PluginField, PluginInfo
+from job_api_aggregator.cli.sources import register, run
+from job_api_aggregator.schema import PluginField, PluginInfo
 
 # ---------------------------------------------------------------------------
 # Helpers — build synthetic PluginInfo objects
@@ -75,7 +75,7 @@ class TestRunOutputShape:
         import argparse
 
         args = argparse.Namespace(credentials=None)
-        with patch("job_aggregator.cli.sources.list_plugins", return_value=_SAMPLE_PLUGINS):
+        with patch("job_api_aggregator.cli.sources.list_plugins", return_value=_SAMPLE_PLUGINS):
             run(args)
 
         captured = capsys.readouterr()
@@ -87,7 +87,7 @@ class TestRunOutputShape:
         import argparse
 
         args = argparse.Namespace(credentials=None)
-        with patch("job_aggregator.cli.sources.list_plugins", return_value=_SAMPLE_PLUGINS):
+        with patch("job_api_aggregator.cli.sources.list_plugins", return_value=_SAMPLE_PLUGINS):
             run(args)
 
         data = json.loads(capsys.readouterr().out)
@@ -98,7 +98,7 @@ class TestRunOutputShape:
         import argparse
 
         args = argparse.Namespace(credentials=None)
-        with patch("job_aggregator.cli.sources.list_plugins", return_value=_SAMPLE_PLUGINS):
+        with patch("job_api_aggregator.cli.sources.list_plugins", return_value=_SAMPLE_PLUGINS):
             run(args)
 
         data = json.loads(capsys.readouterr().out)
@@ -110,7 +110,7 @@ class TestRunOutputShape:
         import argparse
 
         args = argparse.Namespace(credentials=None)
-        with patch("job_aggregator.cli.sources.list_plugins", return_value=_SAMPLE_PLUGINS):
+        with patch("job_api_aggregator.cli.sources.list_plugins", return_value=_SAMPLE_PLUGINS):
             run(args)
 
         data = json.loads(capsys.readouterr().out)
@@ -121,7 +121,7 @@ class TestRunOutputShape:
         import argparse
 
         args = argparse.Namespace(credentials=None)
-        with patch("job_aggregator.cli.sources.list_plugins", return_value=_SAMPLE_PLUGINS):
+        with patch("job_api_aggregator.cli.sources.list_plugins", return_value=_SAMPLE_PLUGINS):
             run(args)
 
         data = json.loads(capsys.readouterr().out)
@@ -148,7 +148,7 @@ class TestRunOutputShape:
         import argparse
 
         args = argparse.Namespace(credentials=None)
-        with patch("job_aggregator.cli.sources.list_plugins", return_value=_SAMPLE_PLUGINS):
+        with patch("job_api_aggregator.cli.sources.list_plugins", return_value=_SAMPLE_PLUGINS):
             run(args)
 
         data = json.loads(capsys.readouterr().out)
@@ -167,7 +167,7 @@ class TestRunOutputShape:
         import argparse
 
         args = argparse.Namespace(credentials=None)
-        with patch("job_aggregator.cli.sources.list_plugins", return_value=_SAMPLE_PLUGINS):
+        with patch("job_api_aggregator.cli.sources.list_plugins", return_value=_SAMPLE_PLUGINS):
             run(args)
 
         data = json.loads(capsys.readouterr().out)
@@ -189,7 +189,7 @@ class TestRunWithCredentials:
         creds_file.write_text(json.dumps(creds))
 
         args = argparse.Namespace(credentials=str(creds_file))
-        with patch("job_aggregator.cli.sources.list_plugins", return_value=_SAMPLE_PLUGINS):
+        with patch("job_api_aggregator.cli.sources.list_plugins", return_value=_SAMPLE_PLUGINS):
             run(args)
 
         data = json.loads(capsys.readouterr().out)
@@ -207,7 +207,7 @@ class TestRunWithCredentials:
         creds_file.write_text(json.dumps(creds))
 
         args = argparse.Namespace(credentials=str(creds_file))
-        with patch("job_aggregator.cli.sources.list_plugins", return_value=_SAMPLE_PLUGINS):
+        with patch("job_api_aggregator.cli.sources.list_plugins", return_value=_SAMPLE_PLUGINS):
             run(args)
 
         data = json.loads(capsys.readouterr().out)
@@ -225,7 +225,7 @@ class TestRunWithCredentials:
         creds_file.write_text(json.dumps(creds))
 
         args = argparse.Namespace(credentials=str(creds_file))
-        with patch("job_aggregator.cli.sources.list_plugins", return_value=_SAMPLE_PLUGINS):
+        with patch("job_api_aggregator.cli.sources.list_plugins", return_value=_SAMPLE_PLUGINS):
             run(args)
 
         data = json.loads(capsys.readouterr().out)
@@ -243,7 +243,7 @@ class TestRunWithCredentials:
         creds_file.write_text(json.dumps(creds))
 
         args = argparse.Namespace(credentials=str(creds_file))
-        with patch("job_aggregator.cli.sources.list_plugins", return_value=_SAMPLE_PLUGINS):
+        with patch("job_api_aggregator.cli.sources.list_plugins", return_value=_SAMPLE_PLUGINS):
             run(args)
 
         data = json.loads(capsys.readouterr().out)
@@ -261,7 +261,7 @@ class TestRunWithCredentials:
         creds_file.write_text(json.dumps(creds))
 
         args = argparse.Namespace(credentials=str(creds_file))
-        with patch("job_aggregator.cli.sources.list_plugins", return_value=_SAMPLE_PLUGINS):
+        with patch("job_api_aggregator.cli.sources.list_plugins", return_value=_SAMPLE_PLUGINS):
             run(args)
 
         data = json.loads(capsys.readouterr().out)
@@ -287,7 +287,7 @@ class TestRunErrorHandling:
 
         args = argparse.Namespace(credentials="/nonexistent/path/creds.json")
         with (
-            patch("job_aggregator.cli.sources.list_plugins", return_value=_SAMPLE_PLUGINS),
+            patch("job_api_aggregator.cli.sources.list_plugins", return_value=_SAMPLE_PLUGINS),
             pytest.raises(SystemExit) as exc_info,
         ):
             run(args)
@@ -305,7 +305,7 @@ class TestRunErrorHandling:
 
         args = argparse.Namespace(credentials=str(bad_file))
         with (
-            patch("job_aggregator.cli.sources.list_plugins", return_value=_SAMPLE_PLUGINS),
+            patch("job_api_aggregator.cli.sources.list_plugins", return_value=_SAMPLE_PLUGINS),
             pytest.raises(SystemExit) as exc_info,
         ):
             run(args)
@@ -367,7 +367,7 @@ class TestCLIIntegration:
     def test_sources_subcommand_exits_zero(self) -> None:
         """'job-aggregator sources' exits 0."""
         result = subprocess.run(
-            [sys.executable, "-m", "job_aggregator.cli", "sources"],
+            [sys.executable, "-m", "job_api_aggregator.cli", "sources"],
             capture_output=True,
             text=True,
         )
@@ -376,7 +376,7 @@ class TestCLIIntegration:
     def test_sources_subcommand_stdout_is_valid_json(self) -> None:
         """'job-aggregator sources' stdout is valid JSON."""
         result = subprocess.run(
-            [sys.executable, "-m", "job_aggregator.cli", "sources"],
+            [sys.executable, "-m", "job_api_aggregator.cli", "sources"],
             capture_output=True,
             text=True,
         )
@@ -387,7 +387,7 @@ class TestCLIIntegration:
     def test_sources_subcommand_has_all_10_plugins(self) -> None:
         """'job-aggregator sources' output includes all 10 plugins."""
         result = subprocess.run(
-            [sys.executable, "-m", "job_aggregator.cli", "sources"],
+            [sys.executable, "-m", "job_api_aggregator.cli", "sources"],
             capture_output=True,
             text=True,
         )
@@ -418,7 +418,7 @@ class TestCLIIntegration:
             [
                 sys.executable,
                 "-m",
-                "job_aggregator.cli",
+                "job_api_aggregator.cli",
                 "sources",
                 "--credentials",
                 str(creds_file),
@@ -437,7 +437,7 @@ class TestCLIIntegration:
             [
                 sys.executable,
                 "-m",
-                "job_aggregator.cli",
+                "job_api_aggregator.cli",
                 "sources",
                 "--credentials",
                 "/nonexistent/creds.json",

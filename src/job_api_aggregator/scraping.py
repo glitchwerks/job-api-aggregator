@@ -33,7 +33,7 @@ logger = logging.getLogger(__name__)
 # ---------------------------------------------------------------------------
 
 #: Minimum character length for a scraped description to be classified as
-#: "full" (spec §9.6).  Imported by :mod:`job_aggregator.normalizer` and
+#: "full" (spec §9.6).  Imported by :mod:`job_api_aggregator.normalizer` and
 #: by ``ingest.py`` in the job-matcher-pr repo — never redefined locally.
 SCRAPE_MIN_LENGTH: int = 500
 

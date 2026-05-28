@@ -28,11 +28,11 @@ from datetime import UTC, datetime, timedelta
 from typing import Any
 from urllib.parse import urlparse, urlunparse
 
-from job_aggregator.auto_register import discover_plugins
-from job_aggregator.base import JobSource
-from job_aggregator.envelope import build_envelope, build_jsonl_lines
-from job_aggregator.normalizer import normalize
-from job_aggregator.schema import JobRecord, SearchParams
+from job_api_aggregator.auto_register import discover_plugins
+from job_api_aggregator.base import JobSource
+from job_api_aggregator.envelope import build_envelope, build_jsonl_lines
+from job_api_aggregator.normalizer import normalize
+from job_api_aggregator.schema import JobRecord, SearchParams
 
 # ---------------------------------------------------------------------------
 # URL normalisation helpers
@@ -82,12 +82,12 @@ def _instantiate_plugin(
     Args:
         cls: The plugin class to instantiate.
         credentials: Credentials dict for the source key (may be empty).
-        search: :class:`~job_aggregator.schema.SearchParams` instance
+        search: :class:`~job_api_aggregator.schema.SearchParams` instance
             carrying the user's query, location, country, hours, and
             max_pages preferences.
 
     Returns:
-        An instantiated :class:`~job_aggregator.base.JobSource`.
+        An instantiated :class:`~job_api_aggregator.base.JobSource`.
 
     Raises:
         TypeError: If the constructor call fails (unexpected signature).
@@ -172,7 +172,7 @@ def _apply_hours_filter(
     than ``cutoff`` are dropped.
 
     Args:
-        records: Normalised :class:`~job_aggregator.schema.JobRecord` list
+        records: Normalised :class:`~job_api_aggregator.schema.JobRecord` list
             from a single source.
         hours: Lookback window in hours.  ``cutoff = now_utc - hours``.
         source_key: Plugin key used only for the summary log line.
@@ -264,7 +264,7 @@ def run_jobs(
 
     Args:
         plugin_classes: Optional pre-resolved plugin mapping (for tests).
-            When ``None``, :func:`~job_aggregator.auto_register.discover_plugins`
+            When ``None``, :func:`~job_api_aggregator.auto_register.discover_plugins`
             is called to discover installed plugins via entry-points.
         credentials: Credentials dict keyed by plugin ``SOURCE`` (the
             ``"plugins"`` sub-dict from the credentials file).  Defaults
@@ -460,7 +460,7 @@ def _serialise(
     Builds the §9.2 envelope and appends ``query_applied`` when present.
 
     Args:
-        jobs: Normalised :class:`~job_aggregator.schema.JobRecord` list.
+        jobs: Normalised :class:`~job_api_aggregator.schema.JobRecord` list.
         sources_used: Plugin keys that successfully contributed records.
         sources_failed: Plugin keys that raised during the run.
         request_summary: Search-parameter summary dict.

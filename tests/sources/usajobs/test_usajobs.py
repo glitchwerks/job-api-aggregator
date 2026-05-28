@@ -14,9 +14,9 @@ from __future__ import annotations
 
 import pytest
 
-from job_aggregator.errors import CredentialsError
-from job_aggregator.plugins.usajobs import Plugin
-from job_aggregator.schema import SearchParams
+from job_api_aggregator.errors import CredentialsError
+from job_api_aggregator.plugins.usajobs import Plugin
+from job_api_aggregator.schema import SearchParams
 
 # ---------------------------------------------------------------------------
 # Fixtures
@@ -134,7 +134,7 @@ class TestClassVarMetadata:
 
     def test_plugin_is_job_source_subclass(self) -> None:
         """Plugin must be a concrete subclass of JobSource."""
-        from job_aggregator.base import JobSource
+        from job_api_aggregator.base import JobSource
 
         assert issubclass(Plugin, JobSource)
 

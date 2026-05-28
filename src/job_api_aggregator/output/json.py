@@ -13,8 +13,8 @@ from __future__ import annotations
 import json
 from typing import Any
 
-from job_aggregator.envelope import build_envelope
-from job_aggregator.schema import JobRecord
+from job_api_aggregator.envelope import build_envelope
+from job_api_aggregator.schema import JobRecord
 
 
 def format_json(
@@ -28,7 +28,7 @@ def format_json(
 ) -> str:
     """Return a compact JSON string for a completed ``jobs`` run.
 
-    Builds the §9.2 envelope via :func:`~job_aggregator.envelope.build_envelope`
+    Builds the §9.2 envelope via :func:`~job_api_aggregator.envelope.build_envelope`
     and appends the optional ``query_applied`` field when provided.
 
     Args:

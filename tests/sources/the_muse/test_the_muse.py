@@ -10,8 +10,8 @@ from __future__ import annotations
 from typing import Any
 from unittest.mock import patch
 
-from job_aggregator.base import JobSource
-from job_aggregator.schema import SearchParams
+from job_api_aggregator.base import JobSource
+from job_api_aggregator.schema import SearchParams
 
 # ---------------------------------------------------------------------------
 # Helpers — synthetic raw records matching The Muse API shape
@@ -52,75 +52,75 @@ class TestPluginMetadata:
 
     def test_plugin_is_importable(self) -> None:
         """Plugin class can be imported from the package path."""
-        from job_aggregator.plugins.the_muse import Plugin
+        from job_api_aggregator.plugins.the_muse import Plugin
 
         assert Plugin is not None
 
     def test_plugin_subclasses_job_source(self) -> None:
         """Plugin must subclass JobSource."""
-        from job_aggregator.plugins.the_muse import Plugin
+        from job_api_aggregator.plugins.the_muse import Plugin
 
         assert issubclass(Plugin, JobSource)
 
     def test_source_key(self) -> None:
         """SOURCE must be 'the_muse'."""
-        from job_aggregator.plugins.the_muse import Plugin
+        from job_api_aggregator.plugins.the_muse import Plugin
 
         assert Plugin.SOURCE == "the_muse"
 
     def test_display_name(self) -> None:
         """DISPLAY_NAME must be 'The Muse'."""
-        from job_aggregator.plugins.the_muse import Plugin
+        from job_api_aggregator.plugins.the_muse import Plugin
 
         assert Plugin.DISPLAY_NAME == "The Muse"
 
     def test_geo_scope(self) -> None:
         """GEO_SCOPE must be 'global' (board is international, no country filter)."""
-        from job_aggregator.plugins.the_muse import Plugin
+        from job_api_aggregator.plugins.the_muse import Plugin
 
         assert Plugin.GEO_SCOPE == "global"
 
     def test_accepts_query_partial(self) -> None:
         """ACCEPTS_QUERY must be 'partial' (maps query to category param)."""
-        from job_aggregator.plugins.the_muse import Plugin
+        from job_api_aggregator.plugins.the_muse import Plugin
 
         assert Plugin.ACCEPTS_QUERY == "partial"
 
     def test_accepts_location_false(self) -> None:
         """ACCEPTS_LOCATION must be False (API has no location filter)."""
-        from job_aggregator.plugins.the_muse import Plugin
+        from job_api_aggregator.plugins.the_muse import Plugin
 
         assert Plugin.ACCEPTS_LOCATION is False
 
     def test_accepts_country_false(self) -> None:
         """ACCEPTS_COUNTRY must be False (API has no country filter)."""
-        from job_aggregator.plugins.the_muse import Plugin
+        from job_api_aggregator.plugins.the_muse import Plugin
 
         assert Plugin.ACCEPTS_COUNTRY is False
 
     def test_rate_limit_notes_is_string(self) -> None:
         """RATE_LIMIT_NOTES must be a non-empty string."""
-        from job_aggregator.plugins.the_muse import Plugin
+        from job_api_aggregator.plugins.the_muse import Plugin
 
         assert isinstance(Plugin.RATE_LIMIT_NOTES, str)
         assert Plugin.RATE_LIMIT_NOTES
 
     def test_required_search_fields_empty(self) -> None:
         """REQUIRED_SEARCH_FIELDS must be empty (no mandatory search fields)."""
-        from job_aggregator.plugins.the_muse import Plugin
+        from job_api_aggregator.plugins.the_muse import Plugin
 
         assert Plugin.REQUIRED_SEARCH_FIELDS == ()
 
     def test_description_set(self) -> None:
         """DESCRIPTION must be a non-empty string copied from source.json."""
-        from job_aggregator.plugins.the_muse import Plugin
+        from job_api_aggregator.plugins.the_muse import Plugin
 
         assert isinstance(Plugin.DESCRIPTION, str)
         assert Plugin.DESCRIPTION
 
     def test_home_url(self) -> None:
         """HOME_URL must be 'https://www.themuse.com'."""
-        from job_aggregator.plugins.the_muse import Plugin
+        from job_api_aggregator.plugins.the_muse import Plugin
 
         assert Plugin.HOME_URL == "https://www.themuse.com"
 
@@ -135,28 +135,28 @@ class TestPluginConstruction:
 
     def test_instantiates_no_args(self) -> None:
         """Plugin instantiates with no arguments."""
-        from job_aggregator.plugins.the_muse import Plugin
+        from job_api_aggregator.plugins.the_muse import Plugin
 
         p = Plugin()
         assert p is not None
 
     def test_instantiates_with_query(self) -> None:
         """Plugin accepts a query (used as category filter)."""
-        from job_aggregator.plugins.the_muse import Plugin
+        from job_api_aggregator.plugins.the_muse import Plugin
 
         p = Plugin(search=SearchParams(query="Data Engineer"))
         assert p is not None
 
     def test_instantiates_with_max_pages(self) -> None:
         """Plugin accepts a max_pages argument."""
-        from job_aggregator.plugins.the_muse import Plugin
+        from job_api_aggregator.plugins.the_muse import Plugin
 
         p = Plugin(search=SearchParams(max_pages=3))
         assert p is not None
 
     def test_settings_schema_returns_empty_dict(self) -> None:
         """settings_schema() returns an empty dict (no credentials required)."""
-        from job_aggregator.plugins.the_muse import Plugin
+        from job_api_aggregator.plugins.the_muse import Plugin
 
         assert Plugin.settings_schema() == {}
 
@@ -170,7 +170,7 @@ class TestNormalise:
     """normalise() maps The Muse API fields to the JobRecord schema."""
 
     def _plugin(self) -> Any:
-        from job_aggregator.plugins.the_muse import Plugin
+        from job_api_aggregator.plugins.the_muse import Plugin
 
         return Plugin()
 
@@ -274,7 +274,7 @@ class TestNormaliseEdgeCases:
     """normalise() handles missing / null API fields gracefully."""
 
     def _plugin(self) -> Any:
-        from job_aggregator.plugins.the_muse import Plugin
+        from job_api_aggregator.plugins.the_muse import Plugin
 
         return Plugin()
 
@@ -363,7 +363,7 @@ class TestPages:
     """
 
     def _plugin(self, search: SearchParams | None = None) -> Any:
-        from job_aggregator.plugins.the_muse import Plugin
+        from job_api_aggregator.plugins.the_muse import Plugin
 
         return Plugin(search=search)
 

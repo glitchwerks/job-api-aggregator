@@ -19,8 +19,8 @@ import os
 
 import pytest
 
-from job_aggregator.plugins.usajobs import Plugin
-from job_aggregator.schema import SearchParams
+from job_api_aggregator.plugins.usajobs import Plugin
+from job_api_aggregator.schema import SearchParams
 
 # Credentials are loaded from .env by conftest.py pytest_configure hook
 # before any test module is imported.  This file does not load dotenv

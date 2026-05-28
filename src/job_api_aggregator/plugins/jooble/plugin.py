@@ -26,9 +26,9 @@ from typing import Any, ClassVar, Literal
 import requests
 from bs4 import BeautifulSoup
 
-from job_aggregator.base import JobSource
-from job_aggregator.errors import CredentialsError
-from job_aggregator.schema import SearchParams
+from job_api_aggregator.base import JobSource
+from job_api_aggregator.errors import CredentialsError
+from job_api_aggregator.schema import SearchParams
 
 logger = logging.getLogger(__name__)
 
@@ -199,7 +199,7 @@ class Plugin(JobSource):
 
         Args:
             credentials: Dict containing ``"api_key"`` (required).
-            search: :class:`~job_aggregator.schema.SearchParams` carrying
+            search: :class:`~job_api_aggregator.schema.SearchParams` carrying
                 ``query``, ``location``, and ``max_pages``.
 
         Raises:
@@ -322,7 +322,7 @@ class Plugin(JobSource):
             raw: A single entry from the Jooble ``jobs`` array.
 
         Returns:
-            Normalised dict conforming to the :class:`~job_aggregator.schema.JobRecord`
+            Normalised dict conforming to the :class:`~job_api_aggregator.schema.JobRecord`
             contract.
         """
         salary_min, salary_max = _parse_salary(raw.get("salary") or "")

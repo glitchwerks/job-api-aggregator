@@ -16,9 +16,9 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from job_aggregator.errors import CredentialsError
-from job_aggregator.plugins.jooble import Plugin
-from job_aggregator.schema import SearchParams
+from job_api_aggregator.errors import CredentialsError
+from job_api_aggregator.plugins.jooble import Plugin
+from job_api_aggregator.schema import SearchParams
 
 # ---------------------------------------------------------------------------
 # Fixtures
@@ -65,7 +65,7 @@ def make_plugin(
     """Construct a Plugin with default valid credentials, applying overrides.
 
     Args:
-        search: Optional :class:`~job_aggregator.schema.SearchParams`
+        search: Optional :class:`~job_api_aggregator.schema.SearchParams`
             to pass to the constructor.  Defaults to ``None``.
         **cred_overrides: Key-value pairs to merge into the credential dict.
 

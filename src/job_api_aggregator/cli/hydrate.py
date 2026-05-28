@@ -28,7 +28,7 @@ This module follows the same conflict-friendly dispatcher pattern as
 
 The dispatcher wires this in with two lines::
 
-    from job_aggregator.cli import hydrate as _hydrate_cmd
+    from job_api_aggregator.cli import hydrate as _hydrate_cmd
     _hydrate_cmd.register(subparsers)
 """
 
@@ -38,8 +38,8 @@ import argparse
 import sys
 from pathlib import Path
 
-from job_aggregator.errors import SchemaVersionError
-from job_aggregator.hydrator import HydrateConfig, hydrate
+from job_api_aggregator.errors import SchemaVersionError
+from job_api_aggregator.hydrator import HydrateConfig, hydrate
 
 # ---------------------------------------------------------------------------
 # Public subcommand API
@@ -173,8 +173,8 @@ def register(
 def run(args: argparse.Namespace) -> None:
     """Execute the hydrate subcommand.
 
-    Opens the input stream, constructs a :class:`~job_aggregator.hydrator.HydrateConfig`
-    from *args*, delegates to :func:`~job_aggregator.hydrator.hydrate`, and
+    Opens the input stream, constructs a :class:`~job_api_aggregator.hydrator.HydrateConfig`
+    from *args*, delegates to :func:`~job_api_aggregator.hydrator.hydrate`, and
     writes the output.
 
     Exit codes:

@@ -14,7 +14,7 @@ Tests cover:
 
 from __future__ import annotations
 
-from job_aggregator.plugins.himalayas import Plugin
+from job_api_aggregator.plugins.himalayas import Plugin
 
 # ---------------------------------------------------------------------------
 # Helpers

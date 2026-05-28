@@ -15,8 +15,8 @@ from collections.abc import Iterator
 from datetime import UTC, datetime
 from typing import Any, ClassVar, Literal
 
-from job_aggregator.base import JobSource
-from job_aggregator.schema import SearchParams
+from job_api_aggregator.base import JobSource
+from job_api_aggregator.schema import SearchParams
 
 #: Sentinel that tells ``_make_record`` to generate a recent timestamp.
 _RECENT: str = "__recent__"

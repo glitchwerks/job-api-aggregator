@@ -60,7 +60,7 @@ class PluginField:
 class PluginInfo:
     """Complete, serialisable description of a registered plugin.
 
-    Built from a :class:`~job_aggregator.base.JobSource` subclass's
+    Built from a :class:`~job_api_aggregator.base.JobSource` subclass's
     class-level metadata and its :meth:`settings_schema` return value.
     Consumed by ``list_plugins()`` / ``get_plugin()`` and emitted by
     ``job-aggregator sources``.

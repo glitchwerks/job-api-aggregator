@@ -16,9 +16,9 @@ from typing import Any
 import requests
 from bs4 import BeautifulSoup
 
-from job_aggregator.base import JobSource
-from job_aggregator.errors import ScrapeError
-from job_aggregator.schema import SearchParams
+from job_api_aggregator.base import JobSource
+from job_api_aggregator.errors import ScrapeError
+from job_api_aggregator.schema import SearchParams
 
 logger = logging.getLogger(__name__)
 
@@ -138,7 +138,7 @@ class Plugin(JobSource):
 
         Args:
             credentials: Accepted for interface uniformity; not used.
-            search: :class:`~job_aggregator.schema.SearchParams` instance.
+            search: :class:`~job_api_aggregator.schema.SearchParams` instance.
                 ``query`` is used as the ``tag`` filter; other fields are
                 not forwarded because the Jobicy API has no location or
                 country parameter.
@@ -253,7 +253,7 @@ class Plugin(JobSource):
                 API response.
 
         Returns:
-            A dict conforming to the :class:`~job_aggregator.schema.JobRecord`
+            A dict conforming to the :class:`~job_api_aggregator.schema.JobRecord`
             TypedDict contract.
         """
         # ---- Salary ----

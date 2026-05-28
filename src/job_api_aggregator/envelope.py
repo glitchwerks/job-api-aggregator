@@ -1,7 +1,7 @@
 """Envelope generator for job-aggregator output (spec §9.2).
 
 Produces the top-level JSON envelope that wraps a collection of
-:class:`~job_aggregator.schema.JobRecord` dicts, and provides a JSONL
+:class:`~job_api_aggregator.schema.JobRecord` dicts, and provides a JSONL
 mode where the envelope is the first line (with an empty ``jobs`` list)
 followed by one record per subsequent line.
 
@@ -18,7 +18,7 @@ from collections.abc import Iterator
 from datetime import UTC, datetime
 from typing import Any
 
-from job_aggregator.schema import JobRecord
+from job_api_aggregator.schema import JobRecord
 
 # ---------------------------------------------------------------------------
 # Public constants
@@ -67,7 +67,7 @@ def build_envelope(
         request_summary: Dict describing the search parameters (hours,
             query, location, country, sources).  Preserved verbatim
             from the ``jobs`` run when called from ``hydrate``.
-        jobs: List of :class:`~job_aggregator.schema.JobRecord` dicts
+        jobs: List of :class:`~job_api_aggregator.schema.JobRecord` dicts
             to include in the ``"jobs"`` field.
         generated_at: Optional ISO-8601 UTC string to use as
             ``generated_at``.  Defaults to the current UTC time.  Pass
@@ -110,7 +110,7 @@ def build_jsonl_lines(
     """Yield JSONL lines for the §9.2 JSONL output mode.
 
     The first yielded line is the envelope with ``"jobs": []``.  Each
-    subsequent line is a single :class:`~job_aggregator.schema.JobRecord`
+    subsequent line is a single :class:`~job_api_aggregator.schema.JobRecord`
     serialized as compact JSON (no trailing newline on each line — the
     caller is responsible for joining with ``"\\n"`` if writing to a file).
 

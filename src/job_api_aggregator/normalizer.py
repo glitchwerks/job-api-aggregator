@@ -1,7 +1,7 @@
 """Normalizer for plugin ``normalise()`` output → validated ``JobRecord``.
 
 Converts the raw dict returned by a plugin's ``normalise()`` method into a
-fully validated :class:`~job_aggregator.schema.JobRecord`.  Key
+fully validated :class:`~job_api_aggregator.schema.JobRecord`.  Key
 responsibilities:
 
 - Enforces that identity fields ``source`` and ``source_id`` are present.
@@ -25,14 +25,14 @@ from __future__ import annotations
 import sys
 from typing import Any, Literal
 
-from job_aggregator.schema import JobRecord
+from job_api_aggregator.schema import JobRecord
 
 # ---------------------------------------------------------------------------
 # Public constants
 # ---------------------------------------------------------------------------
 # Canonical definition lives in scraping.py (spec §9.6).  Re-exported here
 # so that existing callers of normalizer.SCRAPE_MIN_LENGTH keep working.
-from job_aggregator.scraping import SCRAPE_MIN_LENGTH as SCRAPE_MIN_LENGTH
+from job_api_aggregator.scraping import SCRAPE_MIN_LENGTH as SCRAPE_MIN_LENGTH
 
 # ---------------------------------------------------------------------------
 # description_source classifier — §9.6 truth table (jobs orchestrator rows)
@@ -114,7 +114,7 @@ def normalize(plugin_output: dict[str, Any]) -> JobRecord:
     """Convert a plugin's ``normalise()`` output dict into a ``JobRecord``.
 
     The *plugin_output* dict is the raw return value from a concrete
-    :class:`~job_aggregator.base.JobSource` subclass's ``normalise()``
+    :class:`~job_api_aggregator.base.JobSource` subclass's ``normalise()``
     method.  This function:
 
     1. Validates that the identity fields ``source`` and ``source_id``
@@ -133,7 +133,7 @@ def normalize(plugin_output: dict[str, Any]) -> JobRecord:
             Must contain at minimum ``source`` and ``source_id``.
 
     Returns:
-        A fully populated :class:`~job_aggregator.schema.JobRecord`.
+        A fully populated :class:`~job_api_aggregator.schema.JobRecord`.
 
     Raises:
         ValueError: If ``source`` or ``source_id`` is absent from

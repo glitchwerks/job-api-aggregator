@@ -1,7 +1,7 @@
 """Entry point for the ``job-aggregator`` console script.
 
 Wires up argparse sub-commands.  Sub-commands are implemented as
-self-contained modules under ``job_aggregator/cli/`` and registered
+self-contained modules under ``job_api_aggregator/cli/`` and registered
 here with a single ``register(subparsers)`` call per module — making
 parallel-PR integration a 2-line diff per new command.
 
@@ -13,7 +13,7 @@ Current sub-commands:
 Public API (consumed by tests):
     :func:`main` — console-script entry point.
     :func:`_build_parser` — returns the configured :class:`argparse.ArgumentParser`.
-    :func:`cmd_jobs` — alias for :func:`job_aggregator.cli.jobs.run`
+    :func:`cmd_jobs` — alias for :func:`job_api_aggregator.cli.jobs.run`
         (preserved for backward-compatibility with existing tests).
 """
 
@@ -22,10 +22,10 @@ from __future__ import annotations
 import argparse
 import sys
 
-from job_aggregator import __version__
-from job_aggregator.cli import hydrate as _hydrate_cmd
-from job_aggregator.cli import jobs as _jobs_cmd
-from job_aggregator.cli import sources as _sources_cmd
+from job_api_aggregator import __version__
+from job_api_aggregator.cli import hydrate as _hydrate_cmd
+from job_api_aggregator.cli import jobs as _jobs_cmd
+from job_api_aggregator.cli import sources as _sources_cmd
 
 # ---------------------------------------------------------------------------
 # Backward-compatible alias — tests import cmd_jobs from this module.
@@ -87,7 +87,7 @@ def main() -> None:
     This is the console-script entry point declared in ``pyproject.toml``::
 
         [project.scripts]
-        job-aggregator = "job_aggregator.cli.__main__:main"
+        job-aggregator = "job_api_aggregator.cli.__main__:main"
 
     Sub-commands set ``args.func`` via
     :meth:`argparse.ArgumentParser.set_defaults`.  If no sub-command is

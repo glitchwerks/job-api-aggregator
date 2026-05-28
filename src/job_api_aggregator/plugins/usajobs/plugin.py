@@ -2,7 +2,7 @@
 
 Wraps the USAJobs REST API (https://developer.usajobs.gov/API-Reference),
 handling pagination, authentication, and normalisation to the canonical
-:class:`~job_aggregator.schema.JobRecord` shape.
+:class:`~job_api_aggregator.schema.JobRecord` shape.
 
 Authentication note:
     The USAJobs API requires two headers:
@@ -26,9 +26,9 @@ from typing import Any, ClassVar, Literal
 
 import requests
 
-from job_aggregator.base import JobSource
-from job_aggregator.errors import CredentialsError, ScrapeError
-from job_aggregator.schema import SearchParams
+from job_api_aggregator.base import JobSource
+from job_api_aggregator.errors import CredentialsError, ScrapeError
+from job_api_aggregator.schema import SearchParams
 
 logger = logging.getLogger(__name__)
 
@@ -77,7 +77,7 @@ def _parse_float(value: object) -> float | None:
 class Plugin(JobSource):
     """USAJobs source plugin.
 
-    Implements the :class:`~job_aggregator.base.JobSource` ABC for the
+    Implements the :class:`~job_api_aggregator.base.JobSource` ABC for the
     US federal government job board at https://www.usajobs.gov.
 
     The USAJobs API accepts a ``Keyword`` query parameter, so free-text
@@ -132,8 +132,8 @@ class Plugin(JobSource):
         Args:
             credentials: Dict containing ``api_key`` and ``email``.
                 Both fields are required; a missing or empty value
-                raises :exc:`~job_aggregator.errors.CredentialsError`.
-            search: :class:`~job_aggregator.schema.SearchParams` carrying
+                raises :exc:`~job_api_aggregator.errors.CredentialsError`.
+            search: :class:`~job_api_aggregator.schema.SearchParams` carrying
                 ``query`` and ``max_pages``.  Location and country are
                 ignored because the USAJobs API does not support them.
 
@@ -260,7 +260,7 @@ class Plugin(JobSource):
                 USAJobs Search API.
 
         Returns:
-            A dict conforming to the :class:`~job_aggregator.schema.JobRecord`
+            A dict conforming to the :class:`~job_api_aggregator.schema.JobRecord`
             shape.
         """
         descriptor: dict[str, Any] = raw.get("MatchedObjectDescriptor") or {}

@@ -7,40 +7,40 @@ and a structured CLI.  No scoring, no database, no LLM dependencies.
 import logging
 from importlib.metadata import PackageNotFoundError, version
 
-from job_aggregator.base import JobSource
-from job_aggregator.envelope import build_envelope, build_jsonl_lines
-from job_aggregator.errors import (
+from job_api_aggregator.base import JobSource
+from job_api_aggregator.envelope import build_envelope, build_jsonl_lines
+from job_api_aggregator.errors import (
     CredentialsError,
     JobAggregatorError,
     PluginConflictError,
     SchemaVersionError,
     ScrapeError,
 )
-from job_aggregator.hydrator import HydrateConfig, hydrate
-from job_aggregator.normalizer import (
+from job_api_aggregator.hydrator import HydrateConfig, hydrate
+from job_api_aggregator.normalizer import (
     classify_description_source,
     normalize,
 )
-from job_aggregator.orchestrator import run_jobs
-from job_aggregator.registry import (
+from job_api_aggregator.orchestrator import run_jobs
+from job_api_aggregator.registry import (
     get_plugin,
     list_plugins,
     make_enabled_sources,
 )
-from job_aggregator.schema import (
+from job_api_aggregator.schema import (
     JobRecord,
     PluginField,
     PluginInfo,
     SearchParams,
 )
-from job_aggregator.scraping import SCRAPE_MIN_LENGTH, scrape_description
+from job_api_aggregator.scraping import SCRAPE_MIN_LENGTH, scrape_description
 
 # ---------------------------------------------------------------------------
 # Version
 # ---------------------------------------------------------------------------
 
 try:
-    __version__: str = version("job-aggregator")
+    __version__: str = version("job-api-aggregator")
 except PackageNotFoundError:
     # Package is not installed (e.g. running directly from source tree
     # without `pip install -e .`).
@@ -52,7 +52,7 @@ except PackageNotFoundError:
 # Attach a NullHandler so that log records emitted by this library are
 # silently discarded unless the *consuming application* configures a
 # handler.  This prevents "No handlers could be found for logger
-# 'job_aggregator'" warnings in library consumers that have not
+# 'job_api_aggregator'" warnings in library consumers that have not
 # configured logging.
 # ---------------------------------------------------------------------------
 

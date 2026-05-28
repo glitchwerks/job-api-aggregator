@@ -24,9 +24,9 @@ from typing import Any
 
 import requests
 
-from job_aggregator.base import JobSource
-from job_aggregator.errors import ScrapeError
-from job_aggregator.schema import SearchParams
+from job_api_aggregator.base import JobSource
+from job_api_aggregator.errors import ScrapeError
+from job_api_aggregator.schema import SearchParams
 
 logger = logging.getLogger(__name__)
 
@@ -142,7 +142,7 @@ class RemotivePlugin(JobSource):
 
         Args:
             credentials: Accepted for interface uniformity; not used.
-            search: :class:`~job_aggregator.schema.SearchParams` instance.
+            search: :class:`~job_api_aggregator.schema.SearchParams` instance.
                 ``query`` is forwarded to the Remotive ``search``
                 parameter.  Location and country are ignored because
                 Remotive is a remote-only board.
@@ -172,7 +172,7 @@ class RemotivePlugin(JobSource):
         """Yield the single page of Remotive listings.
 
         Remotive is a single-page API.  This method makes one GET request
-        and yields a list of normalised :class:`~job_aggregator.schema.JobRecord`
+        and yields a list of normalised :class:`~job_api_aggregator.schema.JobRecord`
         dicts.  Yields nothing if the API returns no listings.
 
         Yields:
@@ -255,7 +255,7 @@ class RemotivePlugin(JobSource):
             raw: A single entry from the Remotive ``"jobs"`` array.
 
         Returns:
-            A dict conforming to :class:`~job_aggregator.schema.JobRecord`.
+            A dict conforming to :class:`~job_api_aggregator.schema.JobRecord`.
         """
         raw_id = raw.get("id")
         source_id = str(raw_id) if raw_id is not None else ""

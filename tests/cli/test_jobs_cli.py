@@ -24,8 +24,8 @@ from unittest.mock import patch
 
 import pytest
 
-from job_aggregator.cli.__main__ import _build_parser
-from job_aggregator.schema import PluginField, PluginInfo
+from job_api_aggregator.cli.__main__ import _build_parser
+from job_api_aggregator.schema import PluginField, PluginInfo
 from tests.fixtures.plugins.stub_plugins import AlwaysQueryPlugin
 
 # ---------------------------------------------------------------------------
@@ -54,7 +54,7 @@ def _make_noauth_info(key: str = "himalayas") -> PluginInfo:
         key: Plugin key to use (default: ``"himalayas"``).
 
     Returns:
-        A :class:`~job_aggregator.schema.PluginInfo` with empty
+        A :class:`~job_api_aggregator.schema.PluginInfo` with empty
         ``fields``, so ``requires_credentials`` is ``False``.
     """
     return PluginInfo(
@@ -79,7 +79,7 @@ def _make_credentialed_info(key: str = "adzuna") -> PluginInfo:
         key: Plugin key to use (default: ``"adzuna"``).
 
     Returns:
-        A :class:`~job_aggregator.schema.PluginInfo` with two required
+        A :class:`~job_api_aggregator.schema.PluginInfo` with two required
         fields, so ``requires_credentials`` is ``True``.
     """
     return PluginInfo(
@@ -110,9 +110,9 @@ def _run_jobs_cli(
 ) -> tuple[str, str, int]:
     """Invoke the ``jobs`` subcommand via the real argparse parser.
 
-    Patches ``job_aggregator.cli.jobs.list_plugins`` (used by
+    Patches ``job_api_aggregator.cli.jobs.list_plugins`` (used by
     ``_resolve_selected_sources``) and
-    ``job_aggregator.orchestrator.discover_plugins`` (used by
+    ``job_api_aggregator.orchestrator.discover_plugins`` (used by
     ``run_jobs``).
 
     Args:
@@ -145,11 +145,11 @@ def _run_jobs_cli(
         patch("sys.stdout", stdout_buf),
         patch("sys.stderr", stderr_buf),
         patch(
-            "job_aggregator.cli.jobs.list_plugins",
+            "job_api_aggregator.cli.jobs.list_plugins",
             return_value=list_plugins_return,
         ),
         patch(
-            "job_aggregator.orchestrator.discover_plugins",
+            "job_api_aggregator.orchestrator.discover_plugins",
             return_value=plugin_classes,
         ),
     ):

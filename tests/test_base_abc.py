@@ -15,7 +15,7 @@ from typing import Any
 
 import pytest
 
-from job_aggregator.base import JobSource
+from job_api_aggregator.base import JobSource
 
 # ---------------------------------------------------------------------------
 # A complete, valid concrete subclass used across multiple tests

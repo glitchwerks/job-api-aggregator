@@ -1,7 +1,7 @@
 """Himalayas job-source plugin.
 
 Wraps the Himalayas Jobs REST API (offset-based pagination) and normalises
-raw response dicts to the :class:`~job_aggregator.schema.JobRecord` contract.
+raw response dicts to the :class:`~job_api_aggregator.schema.JobRecord` contract.
 
 API endpoint: GET https://himalayas.app/jobs/api?limit=<n>&offset=<n>
 Response shape: ``{"jobs": [...], "total": N}``
@@ -20,9 +20,9 @@ from typing import Any
 import requests
 from bs4 import BeautifulSoup
 
-from job_aggregator.base import JobSource
-from job_aggregator.errors import ScrapeError
-from job_aggregator.schema import SearchParams
+from job_api_aggregator.base import JobSource
+from job_api_aggregator.errors import ScrapeError
+from job_api_aggregator.schema import SearchParams
 
 logger = logging.getLogger(__name__)
 
@@ -132,7 +132,7 @@ class Plugin(JobSource):
 
     Handles offset-based pagination, HTML stripping of job descriptions,
     and normalisation of raw Himalayas dicts to the
-    :class:`~job_aggregator.schema.JobRecord` TypedDict contract.
+    :class:`~job_api_aggregator.schema.JobRecord` TypedDict contract.
 
     Himalayas is a remote-first tech job board.  The public API requires
     no authentication and has no published hard rate limits.
@@ -175,7 +175,7 @@ class Plugin(JobSource):
 
         Args:
             credentials: Accepted for interface uniformity; not used.
-            search: :class:`~job_aggregator.schema.SearchParams` instance.
+            search: :class:`~job_api_aggregator.schema.SearchParams` instance.
                 All search fields are ignored because the Himalayas
                 public API accepts no query, location, or country
                 parameters.
@@ -258,7 +258,7 @@ class Plugin(JobSource):
             raw: A single entry from the Himalayas ``jobs`` array.
 
         Returns:
-            A dict conforming to :class:`~job_aggregator.schema.JobRecord`.
+            A dict conforming to :class:`~job_api_aggregator.schema.JobRecord`.
         """
         location_restrictions: list[str] = raw.get("locationRestrictions") or []
         location = ", ".join(location_restrictions) if location_restrictions else "Worldwide"

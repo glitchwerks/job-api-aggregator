@@ -10,7 +10,7 @@ by passing ``user_agent`` as a keyword argument to the constructor.
 
 Example::
 
-    from job_aggregator.plugins.remoteok import Plugin
+    from job_api_aggregator.plugins.remoteok import Plugin
 
     plugin = Plugin()
     for page in plugin.pages():
@@ -27,9 +27,9 @@ from typing import Any, ClassVar, Literal
 import requests
 from bs4 import BeautifulSoup
 
-from job_aggregator.base import JobSource
-from job_aggregator.errors import ScrapeError
-from job_aggregator.schema import SearchParams
+from job_api_aggregator.base import JobSource
+from job_api_aggregator.errors import ScrapeError
+from job_api_aggregator.schema import SearchParams
 
 logger = logging.getLogger(__name__)
 
@@ -89,7 +89,7 @@ class Plugin(JobSource):
 
         Args:
             credentials: Accepted for interface uniformity; not used.
-            search: :class:`~job_aggregator.schema.SearchParams` instance.
+            search: :class:`~job_api_aggregator.schema.SearchParams` instance.
                 All search fields are ignored because RemoteOK has no
                 query, location, or country filter.
         """
@@ -160,7 +160,7 @@ class Plugin(JobSource):
             raw: A single raw listing dict from the RemoteOK API.
 
         Returns:
-            A normalised dict conforming to :class:`~job_aggregator.schema.JobRecord`.
+            A normalised dict conforming to :class:`~job_api_aggregator.schema.JobRecord`.
         """
         # ---- salary: 0 or absent → None --------------------------------
         raw_salary_min = raw.get("salary_min")
