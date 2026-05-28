@@ -1,22 +1,22 @@
-# `job-aggregator` Package — Design Spec (v3-patched)
+# `job-api-aggregator` Package — Design Spec (v3-patched)
 
 **Date:** 2026-04-23
 **Status:** Draft v3-patched — pending user review
 **Author:** Christopher Beaulieu (with Claude Code)
-**Repo strategy:** Separate repo (`job-aggregator`) developed **standalone**;
+**Repo strategy:** Separate repo (`job-api-aggregator`) developed **standalone**;
 **Phase 1** ships v1.0 of the package independently. **Phase 2 (deferred)**
 migrates `job-matcher-pr` to consume the package. The two phases are
 sequenced — Phase 2 does not begin until Phase 1's v1.0 is shipped and
 validated against the target external consumer.
 
 This separation guarantees no cross-contamination during initial
-development: changes to `job-matcher-pr` cannot disrupt `job-aggregator`'s
+development: changes to `job-matcher-pr` cannot disrupt `job-api-aggregator`'s
 work, and vice versa, until the deliberate Phase 2 migration.
 
 **Revision history:**
 - v1 → v2: address inquisitor blockers (translator/extraction/schema)
 - v2 → v3: **structural reframe.** Extract the data-source layer into an
-  independent `job-aggregator` package. `job-matcher-pr` becomes a consumer of
+  independent `job-api-aggregator` package. `job-matcher-pr` becomes a consumer of
   that package (alongside the user's other evaluation tools). Eliminates 9 of
   14 inquisitor findings outright by removing the in-repo coupling that
   forced them. See §15 for the v2→v3 reframe rationale.
@@ -36,9 +36,9 @@ non-`job-matcher-pr` evaluation system the user maintains) in mind that needs
 full job descriptions for LLM scoring. That consumer should be able to:
 
 ```bash
-pip install job-aggregator
-job-aggregator jobs --hours 24 --query "python developer" --credentials creds.json \
-  | job-aggregator hydrate > full.jsonl
+pip install job-api-aggregator
+job-api-aggregator jobs --hours 24 --query "python developer" --credentials creds.json \
+  | job-api-aggregator hydrate > full.jsonl
 # now consumer's own pipeline reads full.jsonl
 ```
 
@@ -54,13 +54,13 @@ code lives once.
 
 ### Phase 1 (this spec's primary scope)
 
-Ship a standalone Python package `job-aggregator` v1.0 providing:
+Ship a standalone Python package `job-api-aggregator` v1.0 providing:
 
-- `job-aggregator jobs` — fetch listings from configured aggregator sources,
+- `job-api-aggregator jobs` — fetch listings from configured aggregator sources,
   normalize them, emit structured records
-- `job-aggregator hydrate` — read records from stdin/file, scrape full job
+- `job-api-aggregator hydrate` — read records from stdin/file, scrape full job
   descriptions, emit enriched records
-- `job-aggregator sources` — discovery: enumerate available plugins
+- `job-api-aggregator sources` — discovery: enumerate available plugins
 - A typed Python introspection API (`list_plugins()`, `get_plugin(key)`)
   consumable by any UI host
 - A stable, semver-versioned package contract (output schema, credentials
@@ -71,12 +71,12 @@ contract. **`job-matcher-pr` is not modified during Phase 1.**
 
 ### Phase 2 (deferred to a separate later milestone)
 
-Migrate `job-matcher-pr` to consume `job-aggregator`:
+Migrate `job-matcher-pr` to consume `job-api-aggregator`:
 
 - Replace `job-matcher-pr/job_sources/` and `job-matcher-pr/plugins/sources/`
-  with imports from `job-aggregator`
+  with imports from `job-api-aggregator`
 - Migrate `web/settings.py` and `web/admin.py` to use
-  `job_aggregator.list_plugins()` introspection
+  `job_api_aggregator.list_plugins()` introspection
 - Add credentials adapter at the boundary
 - Preserve `job-matcher-pr`'s observable behaviour (ingest output, scoring,
   DB writes all unchanged from a user perspective)
@@ -89,7 +89,7 @@ forward-planning but are NOT part of the immediate work.
 ## 3. Non-goals
 
 - **No scoring in the package.** LLM evaluation is the consumer's job.
-- **No database access from the package.** `job-aggregator` cannot import or
+- **No database access from the package.** `job-api-aggregator` cannot import or
   require any database client. External consumers run without `DATABASE_URL`.
 - **No filtering in the package** *beyond* fetch-side params (hours, source
   selection). Title/contract filters and geo filters stay in
@@ -106,14 +106,14 @@ forward-planning but are NOT part of the immediate work.
 
 ### Phase 1 user stories
 
-1. **External consumer ad-hoc.** `pip install job-aggregator`. Run
-   `job-aggregator sources` to see what's available. Run `job-aggregator jobs
-   --hours 24 --query "python" --credentials ./my-creds.json | job-aggregator
+1. **External consumer ad-hoc.** `pip install job-api-aggregator`. Run
+   `job-api-aggregator sources` to see what's available. Run `job-api-aggregator jobs
+   --hours 24 --query "python" --credentials ./my-creds.json | job-api-aggregator
    hydrate > today.jsonl`. Feed `today.jsonl` into their own scoring
    pipeline. **This is the primary Phase 1 validation user story.**
 
 2. **External consumer programmatic.** A Python script in another project
-   does `from job_aggregator import list_plugins, ScrapeRunner` and
+   does `from job_api_aggregator import list_plugins, ScrapeRunner` and
    orchestrates scraping in-process without spawning subprocesses.
 
 3. **Plugin author.** A developer wanting to add a new aggregator source
@@ -124,14 +124,14 @@ forward-planning but are NOT part of the immediate work.
 ### Phase 2 user stories (deferred)
 
 4. **`job-matcher-pr` self-use.** `python ingest.py` works exactly as today.
-   Internally, `ingest.py` now does `from job_aggregator import
+   Internally, `ingest.py` now does `from job_api_aggregator import
    make_enabled_sources, scrape_description, ...` and uses the package's
    primitives. No observable change for the user.
 
 5. **`job-matcher-pr` settings UI.** The user opens Settings → Sources, sees
    the same list of sources with the same descriptions and credential fields
    they see today. Internally, the route handler now calls
-   `job_aggregator.list_plugins()` instead of introspecting local plugin
+   `job_api_aggregator.list_plugins()` instead of introspecting local plugin
    classes. No visible change.
 
 ## 5. Architectural decisions
@@ -154,7 +154,7 @@ scraping. The slow stage is named so its cost is visible. Each command is
 independently testable. Composable via shell pipes:
 
 ```bash
-job-aggregator jobs --hours 24 --query python | job-aggregator hydrate > full.jsonl
+job-api-aggregator jobs --hours 24 --query python | job-api-aggregator hydrate > full.jsonl
 ```
 
 ### 5.2 Package owns plugin definitions; apps own user state
@@ -177,7 +177,7 @@ consuming apps render them however they want.
 
 This is the structural lesson from v2. `ingest.run()` keeps its current
 loop (scoring, DB writes, per-provider cost tracking, SSE event emission,
-filtering) untouched. The package's `job-aggregator jobs` orchestrator has its
+filtering) untouched. The package's `job-api-aggregator jobs` orchestrator has its
 own loop (fetch + normalize + emit). They both call the same primitives
 (plugin `pages()`, `scrape_description`) but neither orchestrator depends
 on the other.
@@ -210,9 +210,9 @@ listings get inconsistent provenance depending on which code path produced
 them.
 
 **Mitigations:**
-- `_SCRAPE_MIN_LENGTH` lives in the package (`job_aggregator.scraping`),
+- `_SCRAPE_MIN_LENGTH` lives in the package (`job_api_aggregator.scraping`),
   exported as a public constant. `ingest.py` imports it: `from
-  job_aggregator.scraping import SCRAPE_MIN_LENGTH`. **One source of truth for
+  job_api_aggregator.scraping import SCRAPE_MIN_LENGTH`. **One source of truth for
   the constant.**
 - The truth table in §9.6 is the definitional reference. Both orchestrators
   must implement it identically; tests in both repos validate against the
@@ -236,8 +236,8 @@ eliminated by removing the feature.)
 ## 6. Package structure
 
 ```
-job-aggregator/                           # NEW REPO
-├── pyproject.toml                     # console script: job-aggregator
+job-api-aggregator/                           # NEW REPO
+├── pyproject.toml                     # console script: job-api-aggregator
 ├── README.md
 ├── LICENSE
 ├── docs/
@@ -245,7 +245,7 @@ job-aggregator/                           # NEW REPO
 │   ├── plugin_authoring.md            # how to write a new plugin
 │   └── examples/sample-output.jsonl
 ├── src/
-│   └── job_aggregator/
+│   └── job_api_aggregator/
 │       ├── __init__.py                # public API: re-exports
 │       ├── base.py                    # JobSource ABC (moved from job-matcher-pr/job_sources/base.py)
 │       ├── loader.py                  # plugin discovery (moved from job_sources/loader.py)
@@ -280,7 +280,7 @@ job-aggregator/                           # NEW REPO
 
 ```toml
 [project]
-name = "job-aggregator"
+name = "job-api-aggregator"
 version = "0.1.0"
 requires-python = ">=3.11"          # Himalayas plugin uses from datetime import UTC (3.11+)
 dependencies = [
@@ -291,11 +291,11 @@ dependencies = [
 # CI must enforce this — see §14.
 
 [project.scripts]
-job-aggregator = "job_aggregator.cli.__main__:main"
+job-api-aggregator = "job_api_aggregator.cli.__main__:main"
 
-[project.entry-points."job_aggregator.plugins"]
+[project.entry-points."job_api_aggregator.plugins"]
 # v1 ships with built-in plugins; third parties can add via their own packages.
-adzuna = "job_aggregator.plugins.adzuna:AdzunaSource"
+adzuna = "job_api_aggregator.plugins.adzuna:AdzunaSource"
 # ... all 10 ...
 ```
 
@@ -314,8 +314,8 @@ force-disable specific keys.
 ## 7. Public Python API
 
 ```python
-# Re-exported from job_aggregator.__init__:
-from job_aggregator import (
+# Re-exported from job_api_aggregator.__init__:
+from job_api_aggregator import (
     # Discovery
     list_plugins,           # () -> list[PluginInfo]
     get_plugin,             # (key: str) -> PluginInfo | None
@@ -357,17 +357,17 @@ from job_sources import make_enabled_sources, get_required_search_fields
 # (scrape_description was a local function in ingest.py)
 
 # After:
-from job_aggregator import make_enabled_sources, scrape_description, list_plugins
+from job_api_aggregator import make_enabled_sources, scrape_description, list_plugins
 # get_required_search_fields equivalent: list_plugins() returns
 # requires_credentials per plugin
 ```
 
 ## 8. CLI surface
 
-### 8.1 `job-aggregator jobs`
+### 8.1 `job-api-aggregator jobs`
 
 ```
-job-aggregator jobs [OPTIONS]
+job-api-aggregator jobs [OPTIONS]
 ```
 
 | Flag | Type | Default | Description |
@@ -387,10 +387,10 @@ job-aggregator jobs [OPTIONS]
 | `--dry-run` | flag | off | List which sources would run with which params. No HTTP calls. |
 | `-v` / `-vv` / `--quiet` | flag | off | Stderr verbosity. |
 
-### 8.2 `job-aggregator hydrate`
+### 8.2 `job-api-aggregator hydrate`
 
 ```
-job-aggregator hydrate [OPTIONS]
+job-api-aggregator hydrate [OPTIONS]
 ```
 
 | Flag | Type | Default | Description |
@@ -425,7 +425,7 @@ first non-whitespace byte of input. If it is `{` AND the first complete JSON
 value parses as a single object containing `"jobs"`, treat as `--format
 json`. Otherwise treat as `--format jsonl`. Document this in `--help`.
 
-### 8.3 `job-aggregator sources`
+### 8.3 `job-api-aggregator sources`
 
 Emits a JSON document describing every registered plugin:
 
@@ -600,7 +600,7 @@ table identically. Tests in both repos validate against it.
 row classification. The contract test described in §5.3 validates this.
 
 **`SCRAPE_MIN_LENGTH`** is defined as a public constant in
-`job_aggregator.scraping`. `ingest.py` imports it; never redefines it locally.
+`job_api_aggregator.scraping`. `ingest.py` imports it; never redefines it locally.
 
 ## 10. Credentials file format
 
@@ -662,7 +662,7 @@ shape directly.
 
 Each plugin is a Python class that:
 
-1. Subclasses `job_aggregator.JobSource` (ABC)
+1. Subclasses `job_api_aggregator.JobSource` (ABC)
 2. Declares class-level metadata: `SOURCE` (key), `DISPLAY_NAME`,
    `DESCRIPTION`, `HOME_URL`, `GEO_SCOPE`, `ACCEPTS_QUERY`,
    `ACCEPTS_LOCATION`, `ACCEPTS_COUNTRY`, `RATE_LIMIT_NOTES`
@@ -754,7 +754,7 @@ package as the canonical "what each plugin supports" reference.
 
 > **This entire section describes Phase 2 work. It is included in the spec
 > for forward-planning but does NOT begin until Phase 1 has shipped v1.0 of
-> `job-aggregator` and the target external consumer has validated the
+> `job-api-aggregator` and the target external consumer has validated the
 > package contract. Treat the content below as a planning artifact, not as
 > immediate work.**
 
@@ -763,13 +763,13 @@ package as the canonical "what each plugin supports" reference.
 ```
 ~/code/
 ├── job-matcher-pr/         # existing repo
-└── job-aggregator/            # NEW repo (sibling)
+└── job-api-aggregator/            # NEW repo (sibling)
 ```
 
 `job-matcher-pr`'s dev venv:
 
 ```bash
-pip install -e ../job-aggregator
+pip install -e ../job-api-aggregator
 ```
 
 This means the working code on disk is the only copy; both repos read from
@@ -783,15 +783,15 @@ plugins. If the two plugin sets disagreed (typo in entry-point, plugin added
 mid-migration), the user could enable a source in the UI that ingest
 couldn't run, or vice versa. Revised sequence eliminates this window:
 
-1. **Build `job-aggregator` package** (Issues A-G in §13). Install into
+1. **Build `job-api-aggregator` package** (Issues A-G in §13). Install into
    `job-matcher-pr` venv via editable install. Verify package CLI works
    standalone.
 2. **Add a parity assertion test** in `job-matcher-pr` (~10 LOC) that
    imports both the local `job_sources.get_sources()` and
-   `job_aggregator.list_plugins()` and asserts the keys match. This test is
+   `job_api_aggregator.list_plugins()` and asserts the keys match. This test is
    added BEFORE step 3 and removed in step 4. It guards the migration.
 3. **Lockstep migration PR**: a single PR that migrates BOTH `ingest.py`
-   AND `web/settings.py` + `web/admin.py` to import from `job_aggregator`. The
+   AND `web/settings.py` + `web/admin.py` to import from `job_api_aggregator`. The
    parity test from step 2 ensures plugin sets match before this PR can
    merge. UI and ingest read from the same source from the moment the PR
    lands.
@@ -800,7 +800,7 @@ couldn't run, or vice versa. Revised sequence eliminates this window:
    — only one source of plugin definitions remains).
 5. **Run full test suite** (2062 tests). Fix any test breakage from import
    path changes.
-6. **Add `job-aggregator>=1.0`** to `requirements.txt`.
+6. **Add `job-api-aggregator>=1.0`** to `requirements.txt`.
 
 The lockstep PR (step 3) is the only step with risk; the parity test (step
 2) and full-suite verification (step 5) bracket it.
@@ -810,17 +810,17 @@ The lockstep PR (step 3) is the only step with risk; the parity test (step
 Two phases:
 - **Phase 1 (development)**: editable install from sibling directory. No
   PyPI publish needed.
-- **Phase 2 (production)**: publish `job-aggregator` to PyPI; pin in
-  `job-matcher-pr/requirements.txt` (`job-aggregator==1.0.0`). Optional —
+- **Phase 2 (production)**: publish `job-api-aggregator` to PyPI; pin in
+  `job-matcher-pr/requirements.txt` (`job-api-aggregator==1.0.0`). Optional —
   during the development period, consumers can install via git ref
-  (`pip install git+https://github.com/.../job-aggregator.git@v1.0.0`).
+  (`pip install git+https://github.com/.../job-api-aggregator.git@v1.0.0`).
 
 ## 13. Issue breakdown
 
-A Milestone titled **"job-aggregator v1"** in the new repo. A separate
-Milestone titled **"Migrate to job-aggregator"** in `job-matcher-pr`.
+A Milestone titled **"job-api-aggregator v1"** in the new repo. A separate
+Milestone titled **"Migrate to job-api-aggregator"** in `job-matcher-pr`.
 
-### `job-aggregator` repo issues (Phase 1 — start here):
+### `job-api-aggregator` repo issues (Phase 1 — start here):
 
 | # | Title | Scope |
 |---|---|---|
@@ -828,9 +828,9 @@ Milestone titled **"Migrate to job-aggregator"** in `job-matcher-pr`.
 | B | **Plugin contract design**: define `JobSource` ABC v3 with new metadata attributes (`DISPLAY_NAME`, `DESCRIPTION`, `HOME_URL`, `GEO_SCOPE`, `ACCEPTS_QUERY`, `ACCEPTS_LOCATION`, `ACCEPTS_COUNTRY`, `RATE_LIMIT_NOTES`, `REQUIRED_SEARCH_FIELDS`). Define `PluginInfo` and `PluginField` schemas. Define entry-point collision policy. | New ABC + schemas |
 | B1-B10 | **Per-plugin migration** (one issue per plugin): adzuna, arbeitnow, himalayas, jobicy, jooble, jsearch, remoteok, remotive, the_muse, usajobs. For each: move file, fill in 8 new metadata attributes (read `fetch_page()` to verify actual behaviour), audit `normalise()` output against §9.3 categories, write per-plugin tests including VCR-recorded `fetch_page()` cassette (see §14.1), populate the metadata catalog row in §11.5. | 10 separate issues, ~1-3h each. The metadata audit is **explicit work**, not mechanical. |
 | C | Build `JobRecord` schema + record normalizer (renames, date normalization, posted_at backfill, empty-vs-null preservation, extra blob assembly) | New |
-| D | Build `job-aggregator jobs` orchestrator + output formatters + in-memory deduplicator | New |
-| E | Build `job-aggregator hydrate` command (move `scrape_description` and `SCRAPE_MIN_LENGTH` from ingest.py to `job_aggregator.scraping`); implement §8.2.1 input handling table | New |
-| F | Build `job-aggregator sources` command + `list_plugins`/`get_plugin` Python API | New |
+| D | Build `job-api-aggregator jobs` orchestrator + output formatters + in-memory deduplicator | New |
+| E | Build `job-api-aggregator hydrate` command (move `scrape_description` and `SCRAPE_MIN_LENGTH` from ingest.py to `job_api_aggregator.scraping`); implement §8.2.1 input handling table | New |
+| F | Build `job-api-aggregator sources` command + `list_plugins`/`get_plugin` Python API | New |
 | G | Documentation: README, output schema (§9 of this spec), plugin authoring guide (incl. metadata attribute meanings), sample fixture (`docs/examples/sample-output.jsonl`), `extra.*` policy disclaimer | Docs |
 
 ### `job-matcher-pr` repo issues (Phase 2 — deferred until Phase 1 ships):
@@ -838,13 +838,13 @@ Milestone titled **"Migrate to job-aggregator"** in `job-matcher-pr`.
 | # | Title | Scope |
 |---|---|---|
 | H | Add parity assertion test (per §12.2 step 2) that locks plugin-set equality between local and package | Pre-migration safety net |
-| I | **Lockstep migration PR**: migrate `ingest.py` AND `web/settings.py` + `web/admin.py` to use `job_aggregator`. Includes credentials adapter (per §10) at `credentials.py::translate_to_package_credentials` with its own unit tests. Update `validate_search_config` to read `required_search_fields` from `PluginInfo`. Delete local `job_sources/` and `plugins/`. Remove parity test. | The single risky step in the migration |
+| I | **Lockstep migration PR**: migrate `ingest.py` AND `web/settings.py` + `web/admin.py` to use `job_api_aggregator`. Includes credentials adapter (per §10) at `credentials.py::translate_to_package_credentials` with its own unit tests. Update `validate_search_config` to read `required_search_fields` from `PluginInfo`. Delete local `job_sources/` and `plugins/`. Remove parity test. | The single risky step in the migration |
 | J | Add `tests/test_scrape_classification_parity.py` — contract test asserting `ingest.run()`'s scrape branch matches the §9.6 truth table (drift mitigation per §5.3) | Drift guard |
 | K | Update `requirements.txt`; verify CI passes against the editable install (or pinned version); update README with new dependency note | Plumbing |
 
 ## 14. Testing strategy
 
-### 14.1 In `job-aggregator`
+### 14.1 In `job-api-aggregator`
 
 **Per-plugin tests** (one file each, 10 files):
 
@@ -876,12 +876,12 @@ Milestone titled **"Migrate to job-aggregator"** in `job-matcher-pr`.
   scrape failure → preserve, timeout enforcement, `--strict` vs default,
   every row of the §9.6 hydrate truth table
 
-**CLI integration tests:** invoke `job-aggregator` as subprocess with various
-args; verify exit codes per §11; verify smoke test passes (`job-aggregator
---help`, `job-aggregator sources`, `job-aggregator jobs --dry-run`).
+**CLI integration tests:** invoke `job-api-aggregator` as subprocess with various
+args; verify exit codes per §11; verify smoke test passes (`job-api-aggregator
+--help`, `job-api-aggregator sources`, `job-api-aggregator jobs --dry-run`).
 
 **Import-fence test** (added to CI): `tests/test_no_db_imports.py` greps
-the entire `src/job_aggregator/` tree for `import db`, `from psycopg2`, `from
+the entire `src/job_api_aggregator/` tree for `import db`, `from psycopg2`, `from
 flask`, `from anthropic`, etc. Fails CI if any forbidden import is added.
 Enforces the no-DB / no-web / no-LLM constraint structurally.
 
@@ -898,7 +898,7 @@ Enforces the no-DB / no-web / no-LLM constraint structurally.
 | # | Decision |
 |---|---|
 | 1 | Package is its own repo, separate from `job-matcher-pr`. |
-| 2 | Editable install (`pip install -e ../job-aggregator`) used during development. **No code duplication, no divergence window.** |
+| 2 | Editable install (`pip install -e ../job-api-aggregator`) used during development. **No code duplication, no divergence window.** |
 | 3 | Package has zero database access. Cannot import `psycopg2`, `db`, or anything that does. CI enforces this with an import check. |
 | 4 | Package has zero web-framework access. No Flask, no Django imports. |
 | 5 | No filtering in package beyond fetch-side params (hours, source list). Title/contract/geo filters stay in `job-matcher-pr`. |

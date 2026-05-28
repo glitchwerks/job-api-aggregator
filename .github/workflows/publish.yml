@@ -8,7 +8,7 @@ on:
 # Trusted publishing via OIDC — no API tokens stored anywhere.
 # Prerequisites:
 #   1. Register the project on PyPI + TestPyPI with trusted publisher:
-#      repo = cbeaulieu-gt/job-aggregator, workflow = publish.yml
+#      repo = cbeaulieu-gt/job-api-aggregator, workflow = publish.yml
 #   2. Create GitHub environments "testpypi" and "pypi" (optional but
 #      strongly recommended — adds manual approval gate for production).
 

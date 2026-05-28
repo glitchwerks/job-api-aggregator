@@ -1,31 +1,31 @@
-# job-aggregator
+# job-api-aggregator
 
 Reusable job aggregation library: pluggable source plugins, normalized output, no scoring or DB dependencies.
 
-[![PyPI version](https://img.shields.io/pypi/v/job-aggregator)](https://pypi.org/project/job-aggregator/)
-[![CI](https://github.com/cbeaulieu-gt/job-aggregator/actions/workflows/ci.yml/badge.svg)](https://github.com/cbeaulieu-gt/job-aggregator/actions/workflows/ci.yml)
-[![Python versions](https://img.shields.io/pypi/pyversions/job-aggregator)](https://pypi.org/project/job-aggregator/)
+[![PyPI version](https://img.shields.io/pypi/v/job-api-aggregator)](https://pypi.org/project/job-api-aggregator/)
+[![CI](https://github.com/cbeaulieu-gt/job-api-aggregator/actions/workflows/ci.yml/badge.svg)](https://github.com/cbeaulieu-gt/job-api-aggregator/actions/workflows/ci.yml)
+[![Python versions](https://img.shields.io/pypi/pyversions/job-api-aggregator)](https://pypi.org/project/job-api-aggregator/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## Installation
 
 ```bash
-pip install job-aggregator
+pip install job-api-aggregator
 ```
 
 ## Quickstart
 
 ```bash
 # List available plugins and whether credentials are configured
-job-aggregator sources
+job-api-aggregator sources
 
 # Fetch listings from no-auth sources and enrich with full descriptions.
-# Run `job-aggregator sources` to see which plugins need credentials —
+# Run `job-api-aggregator sources` to see which plugins need credentials —
 # the example below excludes the four credentialed plugins so it runs
 # out of the box without a credentials file.
-job-aggregator jobs --query "python developer" --hours 24 \
+job-api-aggregator jobs --query "python developer" --hours 24 \
   --exclude-sources adzuna,jooble,jsearch,usajobs \
-  | job-aggregator hydrate > full.jsonl
+  | job-api-aggregator hydrate > full.jsonl
 ```
 
 Each line of `full.jsonl` after the first is a normalized job record. The
@@ -34,8 +34,8 @@ for the full field reference).
 
 ```bash
 # With credentials for paid/keyed sources
-job-aggregator jobs --credentials providers.json --sources adzuna,jooble --hours 24 \
-  | job-aggregator hydrate > full.jsonl
+job-api-aggregator jobs --credentials providers.json --sources adzuna,jooble --hours 24 \
+  | job-api-aggregator hydrate > full.jsonl
 ```
 
 See [docs/credentials_format.md](docs/credentials_format.md) for the

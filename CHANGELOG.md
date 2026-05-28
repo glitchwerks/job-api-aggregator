@@ -41,6 +41,7 @@ source plugins, normalized output, no scoring or DB dependencies.
 
 ### Changed
 
+- Renamed project: distribution `job-aggregator` → `job-api-aggregator`; module `job_aggregator` → `job_api_aggregator`; repo `cbeaulieu-gt/job-aggregator` → `cbeaulieu-gt/job-api-aggregator`. (#59)
 - Dropped `--ignore-vuln CVE-2026-3219` workaround from the `pip-audit` CI step; pip 26.1 (pypa/pip PR #13870, merged 2026-04-19) ships the fix, so the suppression is no longer needed. (#48)
 
 ### Fixed

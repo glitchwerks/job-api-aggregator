@@ -1,4 +1,4 @@
-"""Live-API preflight smoke test for job-aggregator.
+"""Live-API preflight smoke test for job-api-aggregator.
 
 PURPOSE
 -------
@@ -175,7 +175,7 @@ SOURCE_CONFIGS: dict[str, dict[str, Any]] = {
     "remoteok": {
         "url": "https://remoteok.com/api",
         "params": {},
-        "headers": {"User-Agent": "job-aggregator-preflight/0.1"},
+        "headers": {"User-Agent": "job-api-aggregator-preflight/0.1"},
         "cred_keys": [],
         "list_key": None,  # top-level list (first item is metadata)
     },
@@ -275,7 +275,7 @@ def build_arg_parser() -> _PreflightParser:
     parser = _PreflightParser(
         prog="preflight_smoke",
         description=(
-            "Preflight smoke test for job-aggregator source APIs. "
+            "Preflight smoke test for job-api-aggregator source APIs. "
             "Default mode is --dry-run (no network calls). "
             "Pass --live to make actual HTTP requests."
         ),
