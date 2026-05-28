@@ -5,12 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-> **Note:** Version `0.1.0` is pre-release scaffolding (Issue A skeleton).
-> No public release has been made yet. The first public release will be
-> `v1.0.0` once the Code-complete gate defined in the execution plan is
-> satisfied and the external consumer has validated the package contract.
-
 ## [Unreleased]
+
+### Added
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
+## [1.0.0] - 2026-05-27
+
+First public release. Standalone job-aggregator Python package — pluggable
+source plugins, normalized output, no scoring or DB dependencies.
 
 ### Added
 
@@ -31,14 +43,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Dropped `--ignore-vuln CVE-2026-3219` workaround from the `pip-audit` CI step; pip 26.1 (pypa/pip PR #13870, merged 2026-04-19) ships the fix, so the suppression is no longer needed. (#48)
 
-### Deprecated
-
-### Removed
-
 ### Fixed
 
 - `--hours` / `SearchParams.hours` filter is now implemented: records with parseable `posted_at` older than the lookback cutoff are excluded from output. Records with `null` or unparseable `posted_at` are retained (soft-filter policy). `request_summary.records_filtered_by_hours` reports the drop count. (#54)
 - `jobs` subcommand no longer requires `--credentials` when all selected sources are no-auth. When some selected sources do require credentials, the error names them explicitly instead of the generic argparse message. (#50)
 - README quickstart example now explicitly excludes credentialed sources (`adzuna,jooble,jsearch,usajobs`) so the bare copy-paste invocation runs out of the box without a credentials file. The previous example was inconsistent with the new `--credentials` guard introduced in #51. (#52)
-
-### Security
