@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Dropped `scraping` from PyPI keywords — `job-api-aggregator` aggregates job *APIs*, not scrapes; the keyword was misleading. (#62)
+
 ### Deprecated
 
 ### Removed
