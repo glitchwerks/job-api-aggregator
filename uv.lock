@@ -275,8 +275,8 @@ wheels = [
 ]
 
 [[package]]
-name = "job-aggregator"
-version = "0.1.0"
+name = "job-api-aggregator"
+version = "1.0.0"
 source = { editable = "." }
 dependencies = [
     { name = "beautifulsoup4" },
