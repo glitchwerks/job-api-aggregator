@@ -1,4 +1,4 @@
-"""USAJobs source plugin for job-aggregator.
+"""USAJobs source plugin for job-api-aggregator.
 
 Wraps the USAJobs REST API (https://developer.usajobs.gov/API-Reference),
 handling pagination, authentication, and normalisation to the canonical

@@ -1,4 +1,4 @@
-"""Abstract base class for job-aggregator source plugins.
+"""Abstract base class for job-api-aggregator source plugins.
 
 Plugin authors subclass :class:`JobSource`, declare the required class-level
 metadata attributes, and implement the three abstract methods.
@@ -86,7 +86,7 @@ _REQUIRED_CLASS_ATTRS: tuple[str, ...] = (
 
 
 class JobSource(abc.ABC):
-    """Abstract base class for all job-aggregator source plugins.
+    """Abstract base class for all job-api-aggregator source plugins.
 
     Every plugin must subclass ``JobSource``, declare the required
     class-level metadata attributes, and implement the three abstract

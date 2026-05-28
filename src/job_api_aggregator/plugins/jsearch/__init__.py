@@ -1,4 +1,4 @@
-"""JSearch (RapidAPI) job-source plugin for job-aggregator.
+"""JSearch (RapidAPI) job-source plugin for job-api-aggregator.
 
 Wraps the JSearch API (https://jsearch.p.rapidapi.com/search), which
 aggregates job listings from Google for Jobs and returns full plaintext

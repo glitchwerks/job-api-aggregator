@@ -1,4 +1,4 @@
-"""RemoteOK job-source plugin for job-aggregator.
+"""RemoteOK job-source plugin for job-api-aggregator.
 
 RemoteOK exposes a single public endpoint (https://remoteok.com/api) that
 returns all current remote listings as one JSON array.  The first element
@@ -34,7 +34,7 @@ from job_api_aggregator.schema import SearchParams
 logger = logging.getLogger(__name__)
 
 _REMOTEOK_API: str = "https://remoteok.com/api"
-_DEFAULT_USER_AGENT: str = "job-aggregator/1.0"
+_DEFAULT_USER_AGENT: str = "job-api-aggregator/1.0"
 
 
 class Plugin(JobSource):

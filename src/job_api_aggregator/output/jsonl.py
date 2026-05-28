@@ -1,4 +1,4 @@
-"""JSONL output formatter for the job-aggregator ``jobs`` command (§9.2).
+"""JSONL output formatter for the job-api-aggregator ``jobs`` command (§9.2).
 
 Produces a JSONL stream where:
 

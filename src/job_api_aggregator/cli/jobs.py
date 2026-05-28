@@ -1,4 +1,4 @@
-"""CLI subcommand: job-aggregator jobs.
+"""CLI subcommand: job-api-aggregator jobs.
 
 Fetches, normalises, deduplicates, and emits job listings from all
 configured sources (spec §8.1 / Phase D, Issue #16).

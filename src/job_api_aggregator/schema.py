@@ -1,4 +1,4 @@
-"""Schema types for the job-aggregator package.
+"""Schema types for the job-api-aggregator package.
 
 Defines the structured data types used across the public API:
 
@@ -63,7 +63,7 @@ class PluginInfo:
     Built from a :class:`~job_api_aggregator.base.JobSource` subclass's
     class-level metadata and its :meth:`settings_schema` return value.
     Consumed by ``list_plugins()`` / ``get_plugin()`` and emitted by
-    ``job-aggregator sources``.
+    ``job-api-aggregator sources``.
 
     Attributes:
         key: Unique plugin identifier (mirrors ``JobSource.SOURCE``).
@@ -123,7 +123,7 @@ class PluginInfo:
 
 @dataclass(frozen=True, slots=True)
 class SearchParams:
-    """Parameters that control a ``job-aggregator jobs`` run.
+    """Parameters that control a ``job-api-aggregator jobs`` run.
 
     All fields are optional; omitted fields use sensible defaults.
     Pass an instance to ``make_enabled_sources()`` or the ``jobs``

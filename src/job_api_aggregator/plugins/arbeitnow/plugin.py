@@ -1,4 +1,4 @@
-"""Arbeitnow job-board API plugin for job-aggregator.
+"""Arbeitnow job-board API plugin for job-api-aggregator.
 
 Wraps the public Arbeitnow REST API (no authentication required).
 Pagination is driven by ``meta.last_page`` returned on page 1.

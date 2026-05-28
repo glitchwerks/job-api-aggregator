@@ -1,4 +1,4 @@
-"""Exception hierarchy for the job-aggregator package.
+"""Exception hierarchy for the job-api-aggregator package.
 
 All package-specific exceptions inherit from ``JobAggregatorError`` so
 callers can catch any package error with a single except clause while
@@ -9,7 +9,7 @@ from __future__ import annotations
 
 
 class JobAggregatorError(Exception):
-    """Base class for all job-aggregator exceptions."""
+    """Base class for all job-api-aggregator exceptions."""
 
 
 class PluginConflictError(JobAggregatorError):
@@ -130,7 +130,7 @@ class CredentialsError(JobAggregatorError):
 class SchemaVersionError(JobAggregatorError):
     """Input envelope schema_version is incompatible with this package version.
 
-    Raised by ``job-aggregator hydrate`` when the envelope's
+    Raised by ``job-api-aggregator hydrate`` when the envelope's
     ``schema_version`` major component differs from the package's current
     major version (cross-major is refused; see spec §8.2.1).
 
@@ -163,5 +163,5 @@ class SchemaVersionError(JobAggregatorError):
             f"Input schema_version {self.got!r} is incompatible with "
             f"this package (expected major version {self.expected!r}). "
             f"Re-generate the input with a compatible version of "
-            f"job-aggregator."
+            f"job-api-aggregator."
         )

@@ -1,4 +1,4 @@
-"""Adzuna job-source plugin for job-aggregator.
+"""Adzuna job-source plugin for job-api-aggregator.
 
 Wraps the Adzuna Jobs REST API v1, handling pagination, rate-limit
 retry with exponential back-off, and normalisation to the package's

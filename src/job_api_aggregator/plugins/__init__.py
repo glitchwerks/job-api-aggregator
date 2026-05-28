@@ -1,4 +1,4 @@
-"""Plugin sub-packages for job-aggregator.
+"""Plugin sub-packages for job-api-aggregator.
 
 Each sub-package exposes a single ``Plugin`` class that subclasses
 :class:`~job_api_aggregator.base.JobSource`.  Plugins are discovered at

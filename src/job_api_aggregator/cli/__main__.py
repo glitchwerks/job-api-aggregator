@@ -1,4 +1,4 @@
-"""Entry point for the ``job-aggregator`` console script.
+"""Entry point for the ``job-api-aggregator`` console script.
 
 Wires up argparse sub-commands.  Sub-commands are implemented as
 self-contained modules under ``job_api_aggregator/cli/`` and registered
@@ -51,7 +51,7 @@ def _build_parser() -> argparse.ArgumentParser:
         sub-commands attached.
     """
     parser = argparse.ArgumentParser(
-        prog="job-aggregator",
+        prog="job-api-aggregator",
         description=(
             "Fetch and normalise job listings from multiple sources. "
             "See subcommand --help for details."
@@ -87,7 +87,7 @@ def main() -> None:
     This is the console-script entry point declared in ``pyproject.toml``::
 
         [project.scripts]
-        job-aggregator = "job_api_aggregator.cli.__main__:main"
+        job-api-aggregator = "job_api_aggregator.cli.__main__:main"
 
     Sub-commands set ``args.func`` via
     :meth:`argparse.ArgumentParser.set_defaults`.  If no sub-command is

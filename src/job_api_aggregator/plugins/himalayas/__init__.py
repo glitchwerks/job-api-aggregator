@@ -1,4 +1,4 @@
-"""Himalayas job-source plugin for job-aggregator.
+"""Himalayas job-source plugin for job-api-aggregator.
 
 Exports the single :class:`Plugin` name required by the
 ``job_api_aggregator.plugins`` entry-point contract.

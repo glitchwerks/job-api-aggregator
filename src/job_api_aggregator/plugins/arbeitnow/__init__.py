@@ -1,4 +1,4 @@
-"""Arbeitnow job-board plugin for job-aggregator.
+"""Arbeitnow job-board plugin for job-api-aggregator.
 
 Exports :class:`Plugin` as the entry-point target registered under
 ``job_api_aggregator.plugins`` → ``arbeitnow``.

@@ -1,4 +1,4 @@
-"""JSON output formatter for the job-aggregator ``jobs`` command (§9.2).
+"""JSON output formatter for the job-api-aggregator ``jobs`` command (§9.2).
 
 Produces a single JSON object (the §9.2 envelope) with all records
 inlined into the ``"jobs"`` array.  Suitable for consumers that prefer
